@@ -1,0 +1,6 @@
+package com.example.web_mvp
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}

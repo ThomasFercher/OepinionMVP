@@ -1,0 +1,43 @@
+name: nomo_ui_kit
+description: UI Component Library
+version: 0.0.1
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+environment:
+  sdk: '>=3.0.5 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_hooks: ^0.19.0  
+  logger: ^1.4.0
+  nomo_router:
+    path: packages/nomo-router
+  nomo_ui_generator:
+    path: packages/nomo_ui_generator
+  flutter_localizations:
+    sdk: flutter
+  
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^5.1.0
+  build_runner: ^2.0.0
+  
+
+flutter:
+  fonts:
+    - family: FontAwesomeBrands
+      fonts:
+        - asset: lib/icons/fonts/fa-brands-400.ttf
+          weight: 400
+    - family: FontAwesomeRegular
+      fonts:
+        - asset: lib/icons/fonts/fa-regular-400.ttf
+          weight: 400
+    - family: FontAwesomeSolid
+      fonts:
+        - asset: lib/icons/fonts/fa-solid-900.ttf
+          weight: 900
