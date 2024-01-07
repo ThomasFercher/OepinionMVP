@@ -17,14 +17,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.2.0"
-  animations:
-    dependency: transitive
-    description:
-      name: animations
-      sha256: "708e4b68c23228c264b038fe7003a2f5d01ce85fc64d8cae090e86b27fcea6c5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.10"
   app_links:
     dependency: transitive
     description:
@@ -225,19 +217,27 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  flex_color_scheme:
+    dependency: "direct main"
+    description:
+      name: flex_color_scheme
+      sha256: "32914024a4f404d90ff449f58d279191675b28e7c08824046baf06826e99d984"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.3.1"
+  flex_seed_scheme:
+    dependency: transitive
+    description:
+      name: flex_seed_scheme
+      sha256: "29c12aba221eb8a368a119685371381f8035011d18de5ba277ad11d7dfb8657f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_hooks:
-    dependency: transitive
-    description:
-      name: flutter_hooks
-      sha256: b10cab7e0e4dbb60ff5360a740def3919aecbc672240f742a7130a2874204229
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.19.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -246,11 +246,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
-  flutter_localizations:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -261,6 +256,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  font_awesome_flutter:
+    dependency: "direct main"
+    description:
+      name: font_awesome_flutter
+      sha256: "52671aea66da73b58d42ec6d0912b727a42248dd9a7c76d6c20f275783c48c08"
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.6.0"
   frontend_server_client:
     dependency: transitive
     description:
@@ -285,6 +288,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  go_router:
+    dependency: "direct main"
+    description:
+      name: go_router
+      sha256: "3b40e751eaaa855179b416974d59d29669e750d2e50fcdb2b37f1cb0ca8c803a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "13.0.1"
   google_fonts:
     dependency: "direct main"
     description:
@@ -357,14 +368,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
-  intl:
-    dependency: transitive
-    description:
-      name: intl
-      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.18.1"
   io:
     dependency: transitive
     description:
@@ -405,14 +408,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
-  logger:
-    dependency: transitive
-    description:
-      name: logger
-      sha256: "7ad7215c15420a102ec687bb320a7312afd449bac63bfb1c60d9787c27b9767f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.4.0"
   logging:
     dependency: transitive
     description:
@@ -453,27 +448,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
-  nomo_router:
-    dependency: "direct main"
-    description:
-      path: "packages/nomo-ui-kit/packages/nomo-router"
-      relative: true
-    source: path
-    version: "0.0.1"
-  nomo_ui_generator:
-    dependency: transitive
-    description:
-      path: "packages/nomo-ui-kit/packages/nomo_ui_generator"
-      relative: true
-    source: path
-    version: "0.0.0"
-  nomo_ui_kit:
-    dependency: "direct main"
-    description:
-      path: "packages/nomo-ui-kit"
-      relative: true
-    source: path
-    version: "0.0.1"
   package_config:
     dependency: transitive
     description:
@@ -602,13 +576,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
-  route_gen:
-    dependency: "direct main"
-    description:
-      path: "packages/nomo-ui-kit/packages/nomo-router/route_gen"
-      relative: true
-    source: path
-    version: "0.0.0"
   rxdart:
     dependency: transitive
     description:
@@ -694,14 +661,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
-  source_gen:
-    dependency: transitive
-    description:
-      name: source_gen
-      sha256: fc0da689e5302edb6177fdd964efcb7f58912f43c28c2047a808f5bfff643d16
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.4.0"
   source_span:
     dependency: transitive
     description:

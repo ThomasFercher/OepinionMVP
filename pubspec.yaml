@@ -30,15 +30,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  nomo_ui_kit:
-    path: ./packages/nomo-ui-kit
-  nomo_router:
-    path: ./packages/nomo-ui-kit/packages/nomo-router
-  route_gen:
-    path: ./packages/nomo-ui-kit/packages/nomo-router/route_gen
   google_fonts: ^6.1.0
   supabase_flutter: ^2.0.0
-
+  go_router: ^13.0.1
+  flex_color_scheme: ^7.3.1
+  font_awesome_flutter: ^10.6.0
 
 
 

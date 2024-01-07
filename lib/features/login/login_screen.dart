@@ -1,87 +1,265 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:nomo_ui_kit/components/app/app.dart';
-import 'package:nomo_ui_kit/components/buttons/link/nomo_link_button.dart';
-import 'package:nomo_ui_kit/components/buttons/primary/nomo_primary_button.dart';
-import 'package:nomo_ui_kit/components/buttons/text/nomo_text_button.dart';
-import 'package:nomo_ui_kit/components/card/nomo_card.dart';
-import 'package:nomo_ui_kit/components/input/textInput/nomo_input.dart';
-import 'package:nomo_ui_kit/components/text/nomo_text.dart';
-import 'package:nomo_ui_kit/theme/nomo_theme.dart';
-import 'package:nomo_ui_kit/utils/layout_extensions.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:web_mvp/theme/theme.dart';
+import 'package:web_mvp/common/extensions.dart';
+import 'package:web_mvp/main.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final passwordNotifier = ValueNotifier<String>('');
+  final emailNotifier = ValueNotifier<String>('');
+
+  late bool isSignUp;
+
+  @override
+  void initState() {
+    isSignUp = false;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    passwordNotifier.dispose();
+    emailNotifier.dispose();
+    super.dispose();
+  }
+
+  String get password => passwordNotifier.value;
+
+  String get email => emailNotifier.value;
+
+  void login() async {
+    try {
+      await supabase.auth
+          .signInWithPassword(
+            password: password,
+            email: email,
+          )
+          .then(
+            (value) => print(value),
+          );
+    } on AuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: context.colors.error,
+          content: Text(e.message),
+        ),
+      );
+    }
+  }
+
+  void signUp() async {
+    try {
+      await supabase.auth.signUp(
+        password: password,
+        email: email,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.greenAccent,
+          content: Text(
+            'Account created successfully. Please verify your email.',
+          ),
+        ),
+      );
+
+      setState(() {
+        isSignUp = false;
+      });
+    } on AuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: context.colors.error,
+          content: Text(e.message),
+        ),
+      );
+    }
+  }
+
+  void oAuthSignIn(OAuthProvider provider) async {
+    await supabase.auth.signInWithOAuth(provider);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: context.colors.background1,
-      child: Row(
+    return Scaffold(
+      body: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (context.isLarge)
+            Expanded(
+              child: ColoredBox(color: context.colors.primary),
+            ),
           Expanded(
-            flex: 6,
             child: Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 400),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      NomoText(
-                        'Welcome to Oepinion',
-                        style: context.typography.h3,
-                        fit: true,
-                        maxLines: 1,
-                      ),
-                      12.vSpacing,
-                      NomoText(
-                        'Start your journey by logging in.',
-                        style: context.typography.h1,
-                        minFontSize: 24,
-                      ),
-                      24.vSpacing,
-                      NomoInput(
-                        placeHolder: "Email",
-                        usePlaceholderAsTitle: true,
-                        placeHolderStyle: context.typography.b2,
-                        titleStyle: context.typography.b1,
-                      ),
-                      16.vSpacing,
-                      NomoInput(
-                        usePlaceholderAsTitle: true,
-                        placeHolder: "Password",
-                        placeHolderStyle: context.typography.b2,
-                        titleStyle: context.typography.b1,
-                      ),
-                      16.vSpacing,
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: NomoLinkButton(
-                          text: 'Forgot Password?',
-                          // textStyle: context.typography.b2,
-
-                          selectionColor: context.colors.secondary,
-                          onPressed: () {},
-                          padding: EdgeInsets.all(4),
+              child: Container(
+                color: context.colors.surface,
+                width: 500,
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      "Welcome to Öpinion",
+                      style: context.typography.headlineLarge,
+                    ),
+                    12.vSpacing,
+                    Text(
+                      isSignUp
+                          ? "Please create an account"
+                          : "Please login to continue",
+                      style: context.typography.titleLarge,
+                    ),
+                    32.vSpacing,
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        prefixIcon: Icon(
+                          Icons.email,
+                          size: 18,
                         ),
                       ),
-                      32.vSpacing,
-                      PrimaryNomoButton(
-                        onPressed: () {},
-                        borderRadius: BorderRadius.circular(12),
-                        height: 48,
-                        text: "Login",
-                        textStyle: context.typography.b3,
-                        foregroundColor: Colors.white,
+                      keyboardType: TextInputType.emailAddress,
+                      autocorrect: false,
+                      onChanged: (value) => emailNotifier.value = value,
+                      validator: (_) {},
+                    ),
+                    12.vSpacing,
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Password',
+                        prefixIcon: Icon(
+                          FontAwesomeIcons.key,
+                          size: 16,
+                        ),
                       ),
-                    ],
-                  ),
+                      keyboardType: TextInputType.visiblePassword,
+                      autocorrect: false,
+                      onChanged: (value) => passwordNotifier.value = value,
+                    ),
+                    12.vSpacing,
+                    if (!isSignUp)
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {
+                            context.push('/recover-password');
+                          },
+                          child: const Text('Forgot Password?'),
+                        ),
+                      ),
+                    12.vSpacing,
+                    ElevatedButton(
+                      onPressed: isSignUp ? signUp : login,
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: const Size.fromHeight(48),
+                      ),
+                      child: Text(
+                        isSignUp ? 'Sign Up' : 'Sign In',
+                      ),
+                    ),
+                    48.vSpacing,
+                    Row(
+                      children: [
+                        const Expanded(child: Divider()),
+                        16.hSpacing,
+                        Text(
+                          'or',
+                          style: context.typography.labelLarge,
+                        ),
+                        16.hSpacing,
+                        const Expanded(child: Divider()),
+                      ],
+                    ),
+                    48.vSpacing,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              fixedSize: const Size.fromHeight(48),
+                              backgroundColor: Colors.white,
+                            ),
+                            onPressed: () => oAuthSignIn(OAuthProvider.apple),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  FontAwesomeIcons.apple,
+                                  color: Colors.black,
+                                ),
+                                8.hSpacing,
+                                const Text(
+                                  'Apple',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        24.hSpacing,
+                        Expanded(
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              fixedSize: const Size.fromHeight(48),
+                            ),
+                            onPressed: () => oAuthSignIn(OAuthProvider.google),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  FontAwesomeIcons.google,
+                                  color: Colors.black,
+                                ),
+                                8.hSpacing,
+                                const Text(
+                                  'Google',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    48.vSpacing,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          isSignUp
+                              ? "Already have an account?"
+                              : "Don't have an account?",
+                          style: context.typography.labelLarge,
+                        ),
+                        8.hSpacing,
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              isSignUp = !isSignUp;
+                            });
+                          },
+                          child: Text(
+                            isSignUp ? 'Sign In' : 'Sign Up',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
