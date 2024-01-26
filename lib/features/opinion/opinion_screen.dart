@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:web_mvp/common/entities/survey.dart';
+import 'package:web_mvp/common/entities/survey_with_answer.dart';
 import 'package:web_mvp/common/extensions.dart';
-import 'package:web_mvp/features/opinion/questions/question_page.dart';
+import 'package:web_mvp/features/opinion/questions/multiple_choice_question_page.dart';
+import 'package:web_mvp/features/opinion/questions/range_question_page.dart';
+import 'package:web_mvp/features/opinion/questions/text_question_page.dart';
+import 'package:web_mvp/features/opinion/questions/yes_no_question_page.dart';
 
 const testSurvey = Survey(
   name: "Oepinion",
@@ -103,12 +106,17 @@ class _OpinionScreenState extends State<OpinionScreen> {
   late final PageController _pageController;
   late final ValueNotifier<int> currentPage;
 
+  final SurveyValidator validator = SurveyValidator();
+  final SurveyValidationNotifier validationNotifier =
+      SurveyValidationNotifier();
+
   late bool captchaSolved;
 
   @override
   void initState() {
     _pageController = PageController(initialPage: 0);
     currentPage = ValueNotifier(0)..addListener(onIndexChange);
+    validator.addListener(fieldChanged);
     captchaSolved = false;
     super.initState();
   }
@@ -119,7 +127,18 @@ class _OpinionScreenState extends State<OpinionScreen> {
     currentPage
       ..removeListener(onIndexChange)
       ..dispose();
+    validator
+      ..removeListener(fieldChanged)
+      ..dispose();
     super.dispose();
+  }
+
+  void fieldChanged() {
+    final valid = validator.answerIsValid(currentQuestion);
+
+    if (valid) {
+      currentPage.value = currentPage.value + 1;
+    }
   }
 
   void onIndexChange() {
@@ -129,6 +148,8 @@ class _OpinionScreenState extends State<OpinionScreen> {
       curve: Curves.easeInOut,
     );
   }
+
+  Question get currentQuestion => testSurvey.questions[currentPage.value];
 
   @override
   Widget build(BuildContext context) {
@@ -146,70 +167,136 @@ class _OpinionScreenState extends State<OpinionScreen> {
     //   );
     // }
 
-    return Scaffold(
-      body: Center(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 800),
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              16.vSpacing,
-              ValueListenableBuilder(
-                valueListenable: currentPage,
-                builder: (context, index, child) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "${testSurvey.getPercentage(index)}%",
-                      ),
-                      4.vSpacing,
-                      LinearProgressIndicator(
-                        value: testSurvey.getProgress(index),
-                        borderRadius: BorderRadius.circular(8),
-                        minHeight: 16,
-                      ),
-                    ],
-                  );
-                },
-              ),
-              32.vSpacing,
-              Expanded(
-                child: PageView.builder(
-                  controller: _pageController,
-                  itemBuilder: (context, index) {
-                    final question = testSurvey.questions[index];
-                    return QuestionPage(
-                      question: question,
+    return SurveyInfo(
+      validator: validator,
+      validationNotifier: validationNotifier,
+      child: Scaffold(
+        body: Center(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 800),
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                16.vSpacing,
+                ValueListenableBuilder(
+                  valueListenable: currentPage,
+                  builder: (context, index, child) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "${testSurvey.getPercentage(index)}%",
+                        ),
+                        4.vSpacing,
+                        LinearProgressIndicator(
+                          value: testSurvey.getProgress(index),
+                          borderRadius: BorderRadius.circular(8),
+                          minHeight: 16,
+                        ),
+                      ],
                     );
                   },
                 ),
-              ),
-              32.vSpacing,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      currentPage.value = currentPage.value - 1;
+                32.vSpacing,
+                Expanded(
+                  child: PageView.builder(
+                    controller: _pageController,
+                    itemBuilder: (context, index) {
+                      final question = testSurvey.questions[index];
+                      return switch (question) {
+                        MultipleChoiceQuestion question =>
+                          MultipleChoiceQuestionPage(question: question),
+                        YesNoQuestion question =>
+                          YesNoQuestionPage(question: question),
+                        RangeQuestion question =>
+                          RangeQuestionPage(question: question),
+                        TextQuestion question =>
+                          TextQuestionPage(question: question),
+                        _ => throw UnimplementedError(),
+                      };
                     },
-                    child: const Text("Zurück"),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      currentPage.value = currentPage.value + 1;
-                    },
-                    child: const Text("Weiter"),
+                ),
+                32.vSpacing,
+                ValueListenableBuilder(
+                  valueListenable: currentPage,
+                  builder: (context, _, child) {
+                    if (currentQuestion.handlesNav) {
+                      return const SizedBox.shrink();
+                    }
+                    return child!;
+                  },
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        validationNotifier.validate(currentQuestion);
+                      },
+                      child: const Text("Weiter"),
+                    ),
                   ),
-                ],
-              ),
-              32.vSpacing,
-            ],
+                ),
+                32.vSpacing,
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+}
+
+class SurveyInfo extends InheritedWidget {
+  final SurveyValidator validator;
+  final SurveyValidationNotifier validationNotifier;
+
+  const SurveyInfo({
+    required super.child,
+    required this.validator,
+    required this.validationNotifier,
+    super.key,
+  });
+
+  static SurveyInfo of(BuildContext context) {
+    final resutl = context.dependOnInheritedWidgetOfExactType<SurveyInfo>();
+    assert(resutl != null, "No SurveyInfo found in context");
+    return resutl!;
+  }
+
+  @override
+  bool updateShouldNotify(SurveyInfo oldWidget) {
+    return false;
+  }
+}
+
+class SurveyValidator extends ChangeNotifier {
+  final Map<Question, Answer> _answers = {};
+  final Map<Question, bool> _validQuestions = {};
+
+  void validateField(
+    Question question,
+    bool valid,
+  ) {
+    _validQuestions[question] = valid;
+    notifyListeners();
+  }
+
+  bool answerIsValid(Question question) {
+    return _validQuestions[question]!;
+  }
+
+  void answer(Question question, Answer answer) {
+    _answers[question] = answer;
+  }
+}
+
+class SurveyValidationNotifier extends ChangeNotifier {
+  Question? current;
+
+  void validate(Question question) {
+    current = question;
+    notifyListeners();
   }
 }

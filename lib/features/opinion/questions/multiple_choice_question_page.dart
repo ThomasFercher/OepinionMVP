@@ -1,12 +1,106 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:web_mvp/common/entities/survey.dart';
+import 'package:web_mvp/common/entities/survey_with_answer.dart';
 import 'package:web_mvp/common/extensions.dart';
+import 'package:web_mvp/features/opinion/opinion_screen.dart';
+import 'package:web_mvp/features/opinion/widgets/checkbox_tile.dart';
+import 'package:web_mvp/features/opinion/widgets/error_container.dart';
 
-class MultipleChoiceQuestionPage extends StatelessWidget {
+typedef MultipleChoiceQuestionState = Map<String, bool>;
+
+class MultipleChoiceQuestionPage extends StatefulWidget {
   final MultipleChoiceQuestion question;
 
-  const MultipleChoiceQuestionPage({super.key, required this.question});
+  const MultipleChoiceQuestionPage({
+    super.key,
+    required this.question,
+  });
+
+  @override
+  State<MultipleChoiceQuestionPage> createState() =>
+      _MultipleChoiceQuestionPageState();
+}
+
+class _MultipleChoiceQuestionPageState
+    extends State<MultipleChoiceQuestionPage> {
+  late SurveyValidator validator;
+  late SurveyValidationNotifier validationNotifier;
+
+  late Map<String, ValueNotifier<bool>> valueNotifiers;
+  late ValueNotifier<bool?> validNotifier;
+
+  Map<String, bool> get values => {
+        for (final entry in valueNotifiers.entries)
+          entry.key: entry.value.value,
+      };
+
+  List<String> get choices {
+    return values.entries
+        .where((entry) => entry.value == true)
+        .map((entry) => entry.key)
+        .toList();
+  }
+
+  @override
+  void didChangeDependencies() {
+    validNotifier = ValueNotifier(null);
+    validationNotifier = SurveyInfo.of(context).validationNotifier
+      ..addListener(validate);
+    validator = SurveyInfo.of(context).validator;
+    valueNotifiers = {
+      for (final option in widget.question.choices)
+        option: ValueNotifier(false)
+          ..addListener(
+            () => answerChanged(option),
+          ),
+    };
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    validator.removeListener(validate);
+    for (final notifier in valueNotifiers.values) {
+      notifier.dispose();
+    }
+    super.dispose();
+  }
+
+  bool get isValid {
+    final valid = values.values.every((val) => val == false) == false;
+    validNotifier.value = valid;
+    return valid;
+  }
+
+  void validate() {
+    if (validationNotifier.current != widget.question) return;
+
+    final valid = isValid;
+
+    validator.validateField(widget.question, valid);
+
+    if (valid) {
+      validator.answer(widget.question, MultipleChoiceAnswer(choices: choices));
+    }
+  }
+
+  void answerChanged(String option) {
+    if (widget.question.allowMultiple) return;
+
+    final valid = isValid;
+
+    validator.validateField(widget.question, valid);
+
+    if (valid) {
+      validator.answer(widget.question, MultipleChoiceAnswer(choices: choices));
+    }
+    // if (valueNotifiers[option]!.value == false) return;
+
+    // for (final entry in valueNotifiers.entries) {
+    //   if (entry.key == option) continue;
+    //   entry.value.value = false;
+    // }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,91 +108,32 @@ class MultipleChoiceQuestionPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          question.question,
+          widget.question.question,
           style: context.typography.headlineSmall,
         ),
         48.vSpacing,
         Column(
           children: [
-            for (final option in question.choices)
+            for (final option in widget.question.choices)
               Padding(
                 padding: const EdgeInsets.only(bottom: 12.0),
                 child: CheckBoxTile(
                   title: option,
-                  valueNotifier: ValueNotifier(false),
+                  valueNotifier: valueNotifiers[option]!,
                 ),
               )
           ],
         ),
+        16.vSpacing,
+        ValueListenableBuilder(
+          valueListenable: validNotifier,
+          builder: (context, value, child) {
+            if (value == null || value == true) return const SizedBox.shrink();
+
+            return const ErrorContainer(message: "Please select one option");
+          },
+        ),
       ],
     );
-  }
-}
-
-class CheckBoxTile extends StatelessWidget {
-  final String title;
-  final ValueNotifier<bool> valueNotifier;
-
-  const CheckBoxTile({
-    super.key,
-    required this.title,
-    required this.valueNotifier,
-  });
-
-  void onSelected(bool? value) {
-    if (value == null) return;
-    valueNotifier.value = value;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-        valueListenable: valueNotifier,
-        builder: (context, isSelected, snapshot) {
-          return SizedBox(
-            height: 48,
-            child: Material(
-              color: isSelected
-                  ? const Color(0xFF34C759)
-                  : const Color(0xFFF2F2F7),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-                side: const BorderSide(
-                  color: Color(0xFFE5E5EA),
-                  width: 1,
-                ),
-              ),
-              child: InkWell(
-                onTap: () => onSelected(!valueNotifier.value),
-                borderRadius: BorderRadius.circular(4),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(title),
-                      Checkbox(
-                        value: isSelected,
-                        onChanged: onSelected,
-                        checkColor: const Color(0xFF8E8E93),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        side: BorderSide.none,
-                        fillColor: MaterialStateProperty.resolveWith((states) {
-                          if (states.contains(MaterialState.selected)) {
-                            return Colors.white;
-                          }
-                          return const Color(0xFFD9D9D9);
-                        }),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        });
   }
 }

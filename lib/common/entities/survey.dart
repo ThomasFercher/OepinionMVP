@@ -29,6 +29,8 @@ sealed class Question {
     required this.question,
   });
 
+  bool get handlesNav => false;
+
   Json toJson();
 
   Question fromJson(Json json);
@@ -38,6 +40,9 @@ final class YesNoQuestion extends Question {
   const YesNoQuestion({
     required super.question,
   });
+
+  @override
+  bool get handlesNav => true;
 
   @override
   Json toJson() {
@@ -65,6 +70,9 @@ final class MultipleChoiceQuestion extends Question {
   });
 
   @override
+  bool get handlesNav => allowMultiple == false;
+
+  @override
   Json toJson() {
     return {
       'question': question,
@@ -85,6 +93,16 @@ final class MultipleChoiceQuestion extends Question {
 
 final class RangeQuestion extends Question {
   final Map<int, String> choices;
+
+  int get min => choices.keys.reduce(
+        (value, element) => value > element ? element : value,
+      );
+
+  int get middle => choices.keys.toList()[((choices.length + 1) / 2).round()];
+
+  int get max => choices.keys.reduce(
+        (value, element) => value < element ? element : value,
+      );
 
   const RangeQuestion({
     required super.question,

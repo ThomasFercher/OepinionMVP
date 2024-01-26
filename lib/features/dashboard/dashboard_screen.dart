@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:web_mvp/routes/routes.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -6,7 +7,17 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Center(child: Text('Dashboard')),
+      body: Column(
+        children: [
+          const Center(child: Text('Dashboard')),
+          TextButton(
+            onPressed: () {
+              appRouter.go("/opinion/123");
+            },
+            child: Text("Go to Survey"),
+          ),
+        ],
+      ),
     );
   }
 }
