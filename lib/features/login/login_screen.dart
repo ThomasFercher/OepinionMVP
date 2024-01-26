@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:web_mvp/common/extensions.dart';
 import 'package:web_mvp/main.dart';
+import 'package:web_mvp/routes/routes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -37,14 +38,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void login() async {
     try {
-      await supabase.auth
-          .signInWithPassword(
-            password: password,
-            email: email,
-          )
-          .then(
-            (value) => print(value),
-          );
+      final result = await supabase.auth.signInWithPassword(
+        password: password,
+        email: email,
+      );
+      if (result.user != null) {
+        appRouter.replace('/dashboard');
+      }
     } on AuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

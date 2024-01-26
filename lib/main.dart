@@ -26,6 +26,7 @@ class App extends StatelessWidget {
       theme: FlexThemeData.light(
         scheme: FlexScheme.deepOrangeM3,
         textTheme: GoogleFonts.interTextTheme(),
+        useMaterial3: true,
       ),
       darkTheme: FlexThemeData.dark(
         scheme: FlexScheme.outerSpace,
