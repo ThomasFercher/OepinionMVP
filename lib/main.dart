@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:web_mvp/routes/routes.dart';
-// import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 final supabase = Supabase.instance.client;
 
@@ -11,7 +11,7 @@ const supabaseUrl = 'https://lguvgarjtlziaeblgnxi.supabase.co';
 const supabaseKey = String.fromEnvironment('supasebase_api_key');
 
 void main() async {
-  // setUrlStrategy(PathUrlStrategy());
+  setUrlStrategy(PathUrlStrategy());
 
   await Supabase.initialize(
     url: 'https://dgrjnxiesxkgbyujipzy.supabase.co',

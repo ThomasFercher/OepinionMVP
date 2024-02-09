@@ -57,6 +57,7 @@ class BetterButton extends StatelessWidget {
   final Color foregroundColor;
   final double width;
   final double height;
+  final bool enabled;
 
   const BetterButton({
     super.key,
@@ -67,6 +68,7 @@ class BetterButton extends StatelessWidget {
     this.foregroundColor = Colors.white,
     this.width = 128,
     this.height = 48,
+    this.enabled = true,
   });
 
   @override
@@ -78,8 +80,11 @@ class BetterButton extends StatelessWidget {
         color: color,
         borderRadius: borderRadius,
         child: InkWell(
-          onTap: onPressed,
+          onTap: enabled ? onPressed : null,
           borderRadius: borderRadius,
+          enableFeedback: enabled,
+          mouseCursor:
+              enabled ? SystemMouseCursors.click : SystemMouseCursors.forbidden,
           child: Center(
             child: Text(
               text,

@@ -1,8 +1,13 @@
+import 'dart:math';
+
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:web_mvp/common/entities/survey.dart';
 import 'package:web_mvp/common/entities/survey_with_answer.dart';
 import 'package:web_mvp/common/extensions.dart';
 import 'package:web_mvp/features/opinion/questions/multiple_choice_question_page.dart';
+import 'package:web_mvp/features/opinion/questions/radio_question_page.dart';
 import 'package:web_mvp/features/opinion/questions/range_question_page.dart';
 import 'package:web_mvp/features/opinion/questions/text_question_page.dart';
 import 'package:web_mvp/features/opinion/questions/yes_no_question_page.dart';
@@ -111,6 +116,7 @@ class _OpinionScreenState extends State<OpinionScreen> {
       SurveyValidationNotifier();
 
   late bool captchaSolved;
+  late bool showResult;
 
   @override
   void initState() {
@@ -118,6 +124,7 @@ class _OpinionScreenState extends State<OpinionScreen> {
     currentPage = ValueNotifier(0)..addListener(onIndexChange);
     validator.addListener(fieldChanged);
     captchaSolved = false;
+    showResult = false;
     super.initState();
   }
 
@@ -135,6 +142,18 @@ class _OpinionScreenState extends State<OpinionScreen> {
 
   void fieldChanged() {
     final valid = validator.answerIsValid(currentQuestion);
+
+    final nextIndex = currentPage.value + 1;
+
+    if (nextIndex >= testSurvey.questions.length) {
+      setState(() {
+        showResult = true;
+      });
+      Future.delayed(const Duration(seconds: 3), () {
+        GoRouter.of(context).go("/opinion/${widget.id}/result");
+      });
+      return;
+    }
 
     if (valid) {
       currentPage.value = currentPage.value + 1;
@@ -167,6 +186,34 @@ class _OpinionScreenState extends State<OpinionScreen> {
     //   );
     // }
 
+    if (showResult) {
+      return Stack(
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: ConfettiWidget(
+              confettiController: ConfettiController()..play(),
+              numberOfParticles: 5,
+              emissionFrequency: 0.05,
+              blastDirectionality: BlastDirectionality.explosive,
+              blastDirection: .5 * pi,
+              shouldLoop: true,
+            ),
+          ),
+          Align(
+            alignment: const Alignment(0, -0.5),
+            child: Material(
+              type: MaterialType.transparency,
+              child: Text(
+                "Danke für deine Teilnahme!",
+                style: context.typography.headlineLarge,
+              ),
+            ),
+          )
+        ],
+      );
+    }
+
     return SurveyInfo(
       validator: validator,
       validationNotifier: validationNotifier,
@@ -182,6 +229,9 @@ class _OpinionScreenState extends State<OpinionScreen> {
                 ValueListenableBuilder(
                   valueListenable: currentPage,
                   builder: (context, index, child) {
+                    if (index == testSurvey.questions.length) {
+                      return const SizedBox.shrink();
+                    }
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
@@ -205,6 +255,7 @@ class _OpinionScreenState extends State<OpinionScreen> {
                     controller: _pageController,
                     itemBuilder: (context, index) {
                       final question = testSurvey.questions[index];
+
                       return switch (question) {
                         MultipleChoiceQuestion question =>
                           MultipleChoiceQuestionPage(question: question),
@@ -214,7 +265,8 @@ class _OpinionScreenState extends State<OpinionScreen> {
                           RangeQuestionPage(question: question),
                         TextQuestion question =>
                           TextQuestionPage(question: question),
-                        _ => throw UnimplementedError(),
+                        RadioQuestion question =>
+                          RadioQuestionPage(question: question),
                       };
                     },
                   ),
@@ -222,7 +274,7 @@ class _OpinionScreenState extends State<OpinionScreen> {
                 32.vSpacing,
                 ValueListenableBuilder(
                   valueListenable: currentPage,
-                  builder: (context, _, child) {
+                  builder: (context, index, child) {
                     if (currentQuestion.handlesNav) {
                       return const SizedBox.shrink();
                     }
@@ -230,11 +282,19 @@ class _OpinionScreenState extends State<OpinionScreen> {
                   },
                   child: Align(
                     alignment: Alignment.centerRight,
-                    child: TextButton(
+                    child: ElevatedButton(
                       onPressed: () {
                         validationNotifier.validate(currentQuestion);
                       },
-                      child: const Text("Weiter"),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          "Weiter",
+                          style: context.typography.bodyLarge?.copyWith(
+                            color: context.colors.primary,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),

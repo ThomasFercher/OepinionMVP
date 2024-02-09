@@ -8,11 +8,11 @@ class Survey {
   int get length => questions.length;
 
   double getProgress(int index) {
-    return (index + 1) / length;
+    return (index) / length;
   }
 
   int getPercentage(int index) {
-    return ((index + 1) / length * 100).round();
+    return ((index) / length * 100).round();
   }
 
   const Survey({
@@ -161,6 +161,9 @@ final class RadioQuestion extends Question {
       'choices': choices,
     };
   }
+
+  @override
+  bool get handlesNav => true;
 
   @override
   Question fromJson(Json json) {
