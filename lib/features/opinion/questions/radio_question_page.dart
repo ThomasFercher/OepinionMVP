@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:web_mvp/common/entities/survey.dart';
 import 'package:web_mvp/common/entities/survey_with_answer.dart';
 import 'package:web_mvp/common/extensions.dart';
-import 'package:web_mvp/features/opinion/opinion_screen.dart';
 import 'package:web_mvp/features/opinion/questions/yes_no_question_page.dart';
+import 'package:web_mvp/features/opinion/validation.dart';
 
 class RadioQuestionPage extends StatelessWidget {
   final RadioQuestion question;

@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
-import 'package:web_mvp/features/opinion/opinion_result_screen.dart';
+import 'package:web_mvp/features/opinion/screens/opinion_result_screen.dart';
 import 'package:web_mvp/features/opinion/opinion_screen.dart';
-import 'package:web_mvp/features/opinion/referal_screen.dart';
+import 'package:web_mvp/features/opinion/screens/referal_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   routes: <RouteBase>[

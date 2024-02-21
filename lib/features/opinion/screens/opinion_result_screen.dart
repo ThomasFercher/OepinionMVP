@@ -2,8 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:web_mvp/common/extensions.dart';
+import 'package:web_mvp/common/widgets/footer.dart';
 import 'package:web_mvp/common/widgets/screen_scaffold.dart';
 import 'package:web_mvp/features/opinion/questions/yes_no_question_page.dart';
+import 'package:web_mvp/features/opinion/widgets/partner_footer.dart';
 import 'package:web_mvp/main.dart';
 import 'package:web_mvp/routes/routes.dart';
 
@@ -155,6 +157,10 @@ class _RaffleContainerState extends State<RaffleContainer> {
             );
           },
         ),
+        96.vSpacing,
+        const PartnerFooter(),
+        96.vSpacing,
+        const Footer(),
       ],
     );
   }

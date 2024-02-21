@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:web_mvp/common/auth/auth_service.dart';
 import 'package:web_mvp/common/extensions.dart';
+import 'package:web_mvp/common/widgets/footer.dart';
 import 'package:web_mvp/common/widgets/screen_scaffold.dart';
 
 class ReferalScreen extends StatelessWidget {
@@ -15,8 +16,8 @@ class ReferalScreen extends StatelessWidget {
     print(user);
 
     return emailConfirmed
-        ? VerifcationOutstandingScreen()
-        : VerifcationOutstandingScreen();
+        ? const VerifcationOutstandingScreen()
+        : const VerifcationOutstandingScreen();
   }
 }
 
@@ -65,7 +66,9 @@ Wir freuen uns auf deine erfolgreiche Teilnahme!
 """,
             style: context.typography.bodyMedium,
             textAlign: TextAlign.center,
-          )
+          ),
+          32.vSpacing,
+          const Footer(),
         ],
       ),
     );

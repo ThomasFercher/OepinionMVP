@@ -5,28 +5,17 @@ import 'package:go_router/go_router.dart';
 import 'package:web_mvp/common/entities/survey.dart';
 import 'package:web_mvp/common/entities/survey_with_answer.dart';
 import 'package:web_mvp/common/extensions.dart';
+import 'package:web_mvp/features/opinion/notifiers.dart';
+import 'package:web_mvp/features/opinion/screens/captcha_screen.dart';
 import 'package:web_mvp/features/opinion/questions/multiple_choice_question_page.dart';
 import 'package:web_mvp/features/opinion/questions/radio_question_page.dart';
 import 'package:web_mvp/features/opinion/questions/range_question_page.dart';
 import 'package:web_mvp/features/opinion/questions/text_question_page.dart';
 import 'package:web_mvp/features/opinion/questions/yes_no_question_page.dart';
+import 'package:web_mvp/features/opinion/screens/finished_screen.dart';
+import 'package:web_mvp/features/opinion/screens/welcome_screen.dart';
+import 'package:web_mvp/features/opinion/validation.dart';
 import 'package:web_mvp/main.dart';
-
-class OpinionNotifier extends ChangeNotifier {
-  Survey? survey;
-
-  void loadSurvey(String id) async {
-    final query = supabase.from('surveys').select().eq('id', id).limit(1);
-
-    final result = await query;
-
-    if (result.isEmpty) return;
-
-    survey = Survey.fromJSON(result.first);
-
-    notifyListeners();
-  }
-}
 
 class OpinionScreen extends StatefulWidget {
   final String? id;
@@ -85,6 +74,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
       SurveyValidationNotifier();
 
   late bool captchaSolved;
+  late bool showStart;
   late bool showResult;
 
   Survey get survey => widget.survey;
@@ -96,6 +86,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
     validator.addListener(fieldChanged);
     captchaSolved = false;
     showResult = false;
+    showStart = true;
     super.initState();
   }
 
@@ -112,7 +103,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
   }
 
   void answerSurvey() async {
-    final answers = validator._answers.values;
+    final answers = validator.answers.values;
 
     await supabase.from('survey_answers').insert({
       'answers': answers.map((e) => e.toJson()).toList(),
@@ -154,46 +145,23 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (showStart) {
+      return WelcomeScreen(
+        onContinue: () {
+          setState(() {
+            showStart = false;
+          });
+        },
+      );
+    }
+
     // TODO: Implement captcha
-    // if (!captchaSolved) {
-    //   return Scaffold(
-    //     body: Checkbox(
-    //       value: false,
-    //       onChanged: (value) {
-    //         setState(() {
-    //           captchaSolved = true;
-    //         });
-    //       },
-    //     ),
-    //   );
-    // }
+    if (!captchaSolved && false) {
+      return const CaptchaScreen();
+    }
 
     if (showResult) {
-      return Stack(
-        children: [
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConfettiWidget(
-              confettiController: ConfettiController()..play(),
-              numberOfParticles: 5,
-              emissionFrequency: 0.05,
-              blastDirectionality: BlastDirectionality.explosive,
-              blastDirection: .5 * pi,
-              shouldLoop: true,
-            ),
-          ),
-          Align(
-            alignment: const Alignment(0, -0.5),
-            child: Material(
-              type: MaterialType.transparency,
-              child: Text(
-                "Danke für deine Teilnahme!",
-                style: context.typography.headlineLarge,
-              ),
-            ),
-          )
-        ],
-      );
+      return const FinishedScreen();
     }
 
     return SurveyInfo(
@@ -235,6 +203,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                 Expanded(
                   child: PageView.builder(
                     controller: _pageController,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       final question = survey.questions[index];
 
@@ -287,58 +256,5 @@ class _SurveyScreenState extends State<SurveyScreen> {
         ),
       ),
     );
-  }
-}
-
-class SurveyInfo extends InheritedWidget {
-  final SurveyValidator validator;
-  final SurveyValidationNotifier validationNotifier;
-
-  const SurveyInfo({
-    required super.child,
-    required this.validator,
-    required this.validationNotifier,
-    super.key,
-  });
-
-  static SurveyInfo of(BuildContext context) {
-    final resutl = context.dependOnInheritedWidgetOfExactType<SurveyInfo>();
-    assert(resutl != null, "No SurveyInfo found in context");
-    return resutl!;
-  }
-
-  @override
-  bool updateShouldNotify(SurveyInfo oldWidget) {
-    return false;
-  }
-}
-
-class SurveyValidator extends ChangeNotifier {
-  final Map<Question, Answer> _answers = {};
-  final Map<Question, bool> _validQuestions = {};
-
-  void validateField(
-    Question question,
-    bool valid,
-  ) {
-    _validQuestions[question] = valid;
-    notifyListeners();
-  }
-
-  bool answerIsValid(Question question) {
-    return _validQuestions[question]!;
-  }
-
-  void answer(Question question, Answer answer) {
-    _answers[question] = answer;
-  }
-}
-
-class SurveyValidationNotifier extends ChangeNotifier {
-  Question? current;
-
-  void validate(Question question) {
-    current = question;
-    notifyListeners();
   }
 }
