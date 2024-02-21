@@ -28068,7 +28068,7 @@ $.ats=!1
 $.a_R=!0
 $.a_D=new A.abT(l,B.mO)
 s=2
-return A.B(A.ahU("","https://dgrjnxiesxkgbyujipzy.supabase.co"),$async$av6)
+return A.B(A.ahU("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRncmpueGllc3hrZ2J5dWppcHp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDQ2NTI5MDYsImV4cCI6MjAyMDIyODkwNn0._-5ybbaMiA9RH7RXaD5UKkEhwu_qncV9sKv941iOov0","https://dgrjnxiesxkgbyujipzy.supabase.co"),$async$av6)
 case 2:if($.a4==null)A.aka()
 l=$.a4
 l.toString
