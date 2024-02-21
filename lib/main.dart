@@ -8,14 +8,14 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 final supabase = Supabase.instance.client;
 
 const supabaseUrl = 'https://lguvgarjtlziaeblgnxi.supabase.co';
-const supabaseKey = String.fromEnvironment('supasebase_api_key');
+const supabaseKey = String.fromEnvironment('supabase_api_key');
 
 void main() async {
   setUrlStrategy(PathUrlStrategy());
 
   await Supabase.initialize(
     url: 'https://dgrjnxiesxkgbyujipzy.supabase.co',
-    anonKey: const String.fromEnvironment('supasebase_api_key'),
+    anonKey: supabaseKey,
   );
   runApp(const App());
 }
