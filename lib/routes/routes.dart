@@ -1,11 +1,7 @@
-import 'dart:math';
-
 import 'package:go_router/go_router.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:web_mvp/features/opinion/opinion_result_screen.dart';
 import 'package:web_mvp/features/opinion/opinion_screen.dart';
 import 'package:web_mvp/features/opinion/referal_screen.dart';
-import 'package:web_mvp/main.dart';
 
 final GoRouter appRouter = GoRouter(
   routes: <RouteBase>[
@@ -42,7 +38,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: "/",
       redirect: (context, state) {
-        return "/opinion/123";
+        return "/opinion/2096122e-162e-4880-9ef6-7aeb56faf2ab";
       },
     ),
     GoRoute(

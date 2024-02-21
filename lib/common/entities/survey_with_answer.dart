@@ -1,17 +1,5 @@
 import 'package:web_mvp/common/entities/survey.dart';
 
-class SurveyWithAnswers {
-  final String name;
-  final String description;
-  final Map<Question, Answer> answers;
-
-  const SurveyWithAnswers({
-    required this.name,
-    required this.description,
-    required this.answers,
-  });
-}
-
 sealed class Answer {
   const Answer();
 

@@ -1,8 +1,12 @@
+import 'package:uuid/uuid.dart';
+
 typedef Json = Map<String, dynamic>;
 
 class Survey {
-  final String name;
+  final String title;
   final String description;
+  final String id;
+
   final List<Question> questions;
 
   int get length => questions.length;
@@ -15,11 +19,42 @@ class Survey {
     return ((index) / length * 100).round();
   }
 
-  const Survey({
-    required this.name,
+  Survey({
+    required this.title,
     required this.description,
     required this.questions,
+  }) : id = const Uuid().v4();
+
+  const Survey.withId({
+    required this.title,
+    required this.description,
+    required this.id,
+    required this.questions,
   });
+
+  Json toJson() {
+    return {
+      'name': title,
+      'description': description,
+      'id': id,
+      'questions': questions.map((e) => e.toJson()).toList(),
+    };
+  }
+
+  factory Survey.fromJSON(Json json) {
+    try {
+      return Survey.withId(
+        title: json['title'] as String,
+        description: json['description'] as String,
+        id: json['id'] as String,
+        questions: (json['questions'] as List).map((e) {
+          return Question.fromJson(e);
+        }).toList(),
+      );
+    } catch (e, s) {
+      rethrow;
+    }
+  }
 }
 
 sealed class Question {
@@ -33,7 +68,17 @@ sealed class Question {
 
   Json toJson();
 
-  Question fromJson(Json json);
+  factory Question.fromJson(Json json) {
+    final type = json['type'] as String;
+    return switch (type) {
+      'yesno' => YesNoQuestion.fromJson(json),
+      'multiplechoice' => MultipleChoiceQuestion.fromJson(json),
+      'range' => RangeQuestion.fromJson(json),
+      'text' => TextQuestion.fromJson(json),
+      'radio' => RadioQuestion.fromJson(json),
+      _ => throw Exception('Unknown question type'),
+    };
+  }
 }
 
 final class YesNoQuestion extends Question {
@@ -47,12 +92,13 @@ final class YesNoQuestion extends Question {
   @override
   Json toJson() {
     return {
+      'type': 'yesno',
       'question': question,
     };
   }
 
   @override
-  Question fromJson(Json json) {
+  factory YesNoQuestion.fromJson(Json json) {
     return YesNoQuestion(
       question: json['question'] as String,
     );
@@ -75,6 +121,7 @@ final class MultipleChoiceQuestion extends Question {
   @override
   Json toJson() {
     return {
+      'type': 'multiplechoice',
       'question': question,
       'choices': choices,
       'allowMultiple': allowMultiple,
@@ -82,7 +129,7 @@ final class MultipleChoiceQuestion extends Question {
   }
 
   @override
-  Question fromJson(Json json) {
+  factory MultipleChoiceQuestion.fromJson(Json json) {
     return MultipleChoiceQuestion(
       question: json['question'] as String,
       choices: (json['choices'] as List).cast<String>(),
@@ -112,17 +159,30 @@ final class RangeQuestion extends Question {
   @override
   Json toJson() {
     return {
+      'type': 'range',
       'question': question,
-      'choices': choices,
+      'choices': choices.toJSON(),
     };
   }
 
   @override
-  Question fromJson(Json json) {
+  factory RangeQuestion.fromJson(Json json) {
     return RangeQuestion(
       question: json['question'] as String,
-      choices: (json['choices'] as Map).cast<int, String>(),
+      choices: (json['choices'] as Json).toRangeMap(),
     );
+  }
+}
+
+extension on Map<int, String> {
+  Map<String, String> toJSON() {
+    return map((key, value) => MapEntry(key.toString(), value));
+  }
+}
+
+extension on Map<String, dynamic> {
+  Map<int, String> toRangeMap() {
+    return map((key, value) => MapEntry(int.parse(key), value as String));
   }
 }
 
@@ -134,12 +194,13 @@ final class TextQuestion extends Question {
   @override
   Json toJson() {
     return {
+      'type': 'text',
       'question': question,
     };
   }
 
   @override
-  Question fromJson(Json json) {
+  factory TextQuestion.fromJson(Json json) {
     return TextQuestion(
       question: json['question'] as String,
     );
@@ -157,6 +218,7 @@ final class RadioQuestion extends Question {
   @override
   Json toJson() {
     return {
+      'type': 'radio',
       'question': question,
       'choices': choices,
     };
@@ -166,7 +228,7 @@ final class RadioQuestion extends Question {
   bool get handlesNav => true;
 
   @override
-  Question fromJson(Json json) {
+  factory RadioQuestion.fromJson(Json json) {
     return RadioQuestion(
       question: json['question'] as String,
       choices: (json['choices'] as List).cast<String>(),

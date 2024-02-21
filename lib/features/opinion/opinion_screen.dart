@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -11,103 +10,73 @@ import 'package:web_mvp/features/opinion/questions/radio_question_page.dart';
 import 'package:web_mvp/features/opinion/questions/range_question_page.dart';
 import 'package:web_mvp/features/opinion/questions/text_question_page.dart';
 import 'package:web_mvp/features/opinion/questions/yes_no_question_page.dart';
+import 'package:web_mvp/main.dart';
 
-const testSurvey = Survey(
-  name: "Oepinion",
-  description: "lorem",
-  questions: [
-    MultipleChoiceQuestion(
-      question: "In welchen Studienabschnitt befindest du dich?",
-      allowMultiple: false,
-      choices: [
-        "Bachelor",
-        "Master",
-        "Doktor",
-      ],
-    ),
-    YesNoQuestion(question: "Arbeitest du aktuell an deiner Abschlussarbeit?"),
-    MultipleChoiceQuestion(
-      question:
-          "Gibt es Aspekte bei deiner Abschlussarbeit, bei denen du dir zusätzliche Unterstützung wünschen würdest?",
-      allowMultiple: true,
-      choices: [
-        "Themenausarbeitung",
-        "Hyposethenbildung",
-        "Forschungsstrategie",
-        "Datenerhebung (z.B. Umfragen)",
-        "Datenanalyse",
-        "Schreibprozess",
-      ],
-    ),
-    YesNoQuestion(
-      question:
-          "Hast du bereits Erfahrungen mit der Erstellung von Umfragen für deine Abschlussarbeit gemacht?",
-    ),
-    RangeQuestion(
-      question:
-          "Wie würdest du den Aufwand der Erstellung deiner Umfrage bewerten",
-      choices: {
-        1: "Sehr gering",
-        2: "Gering",
-        3: "Mittelmäßig",
-        4: "Groß",
-        5: "Sehr groß",
-      },
-    ),
-    RangeQuestion(
-      question:
-          "Wie würdest du die Schwierigkeit bei der Auswertung deiner Umfrage bewerten?",
-      choices: {
-        1: "Sehr gering",
-        2: "Gering",
-        3: "Mittelmäßig",
-        4: "Groß",
-        5: "Sehr groß",
-      },
-    ),
-    TextQuestion(
-      question:
-          "Welche spezifischen Herausforderungen sind dir bei der Erstellung und Auswertung deiner Umfrage begegnet? ",
-    ),
-    YesNoQuestion(
-      question:
-          "Wenn du noch keine Erfahrung mit Meinungsumfragen und deren Auswertung gemacht hast, siehst du das als potenzielles Problem für deine zukünftige Abschlussarbeit?",
-    ),
-    RangeQuestion(
-      question:
-          "Wie wichtig wäre es für dich, Zugang zu einer Plattform zu bekommen, die dich durch den Prozess deiner Abschlussarbeit führt?",
-      choices: {
-        1: "Sehr gering",
-        2: "Gering",
-        3: "Mittelmäßig",
-        4: "Groß",
-        5: "Sehr groß",
-      },
-    ),
-    TextQuestion(
-      question: "Welche Funktionen sollte dieses ideale Tool für dich haben?",
-    ),
-    RadioQuestion(
-      question:
-          "Würdes DU für das Tool bezahlen, oder sollte das dein Institut übernehmen?",
-      choices: ["Ich", "Institut"],
-    ),
-  ],
-);
+class OpinionNotifier extends ChangeNotifier {
+  Survey? survey;
+
+  void loadSurvey(String id) async {
+    final query = supabase.from('surveys').select().eq('id', id).limit(1);
+
+    final result = await query;
+
+    if (result.isEmpty) return;
+
+    survey = Survey.fromJSON(result.first);
+
+    notifyListeners();
+  }
+}
 
 class OpinionScreen extends StatefulWidget {
   final String? id;
 
-  const OpinionScreen({
-    required this.id,
-    super.key,
-  });
+  const OpinionScreen({Key? key, this.id}) : super(key: key);
 
   @override
   State<OpinionScreen> createState() => _OpinionScreenState();
 }
 
 class _OpinionScreenState extends State<OpinionScreen> {
+  late final OpinionNotifier notifier;
+
+  @override
+  void initState() {
+    notifier = OpinionNotifier();
+    if (widget.id != null) {
+      notifier.loadSurvey(widget.id!);
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: notifier,
+      builder: (context, child) {
+        if (notifier.survey == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return SurveyScreen(survey: notifier.survey!);
+      },
+    );
+  }
+}
+
+class SurveyScreen extends StatefulWidget {
+  final Survey survey;
+
+  const SurveyScreen({
+    required this.survey,
+    super.key,
+  });
+
+  @override
+  State<SurveyScreen> createState() => _SurveyScreenState();
+}
+
+class _SurveyScreenState extends State<SurveyScreen> {
   late final PageController _pageController;
   late final ValueNotifier<int> currentPage;
 
@@ -117,6 +86,8 @@ class _OpinionScreenState extends State<OpinionScreen> {
 
   late bool captchaSolved;
   late bool showResult;
+
+  Survey get survey => widget.survey;
 
   @override
   void initState() {
@@ -140,18 +111,29 @@ class _OpinionScreenState extends State<OpinionScreen> {
     super.dispose();
   }
 
+  void answerSurvey() async {
+    final answers = validator._answers.values;
+
+    await supabase.from('survey_answers').insert({
+      'answers': answers.map((e) => e.toJson()).toList(),
+      'survey_id': survey.id,
+    });
+
+    setState(() {
+      showResult = true;
+    });
+    Future.delayed(const Duration(seconds: 3), () {
+      GoRouter.of(context).go("/opinion/${survey.id}/result");
+    });
+  }
+
   void fieldChanged() {
     final valid = validator.answerIsValid(currentQuestion);
 
     final nextIndex = currentPage.value + 1;
 
-    if (nextIndex >= testSurvey.questions.length) {
-      setState(() {
-        showResult = true;
-      });
-      Future.delayed(const Duration(seconds: 3), () {
-        GoRouter.of(context).go("/opinion/${widget.id}/result");
-      });
+    if (nextIndex >= survey.questions.length) {
+      answerSurvey();
       return;
     }
 
@@ -168,7 +150,7 @@ class _OpinionScreenState extends State<OpinionScreen> {
     );
   }
 
-  Question get currentQuestion => testSurvey.questions[currentPage.value];
+  Question get currentQuestion => survey.questions[currentPage.value];
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +211,7 @@ class _OpinionScreenState extends State<OpinionScreen> {
                 ValueListenableBuilder(
                   valueListenable: currentPage,
                   builder: (context, index, child) {
-                    if (index == testSurvey.questions.length) {
+                    if (index == survey.questions.length) {
                       return const SizedBox.shrink();
                     }
                     return Column(
@@ -237,11 +219,11 @@ class _OpinionScreenState extends State<OpinionScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          "${testSurvey.getPercentage(index)}%",
+                          "${survey.getPercentage(index)}%",
                         ),
                         4.vSpacing,
                         LinearProgressIndicator(
-                          value: testSurvey.getProgress(index),
+                          value: survey.getProgress(index),
                           borderRadius: BorderRadius.circular(8),
                           minHeight: 16,
                         ),
@@ -254,7 +236,7 @@ class _OpinionScreenState extends State<OpinionScreen> {
                   child: PageView.builder(
                     controller: _pageController,
                     itemBuilder: (context, index) {
-                      final question = testSurvey.questions[index];
+                      final question = survey.questions[index];
 
                       return switch (question) {
                         MultipleChoiceQuestion question =>

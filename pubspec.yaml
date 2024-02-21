@@ -36,6 +36,7 @@ dependencies:
   flex_color_scheme: ^7.3.1
   font_awesome_flutter: ^10.6.0
   confetti: ^0.7.0
+  uuid: ^4.3.3
 
   
 
