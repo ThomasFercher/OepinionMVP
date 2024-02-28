@@ -1,21 +1,22 @@
-import 'dart:math';
-import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:web_mvp/common/entities/survey.dart';
-import 'package:web_mvp/common/entities/survey_with_answer.dart';
 import 'package:web_mvp/common/extensions.dart';
 import 'package:web_mvp/features/opinion/notifiers.dart';
-import 'package:web_mvp/features/opinion/screens/captcha_screen.dart';
 import 'package:web_mvp/features/opinion/questions/multiple_choice_question_page.dart';
 import 'package:web_mvp/features/opinion/questions/radio_question_page.dart';
 import 'package:web_mvp/features/opinion/questions/range_question_page.dart';
 import 'package:web_mvp/features/opinion/questions/text_question_page.dart';
 import 'package:web_mvp/features/opinion/questions/yes_no_question_page.dart';
+import 'package:web_mvp/features/opinion/screens/captcha_screen.dart';
 import 'package:web_mvp/features/opinion/screens/finished_screen.dart';
 import 'package:web_mvp/features/opinion/screens/welcome_screen.dart';
 import 'package:web_mvp/features/opinion/validation.dart';
 import 'package:web_mvp/main.dart';
+
+String? getReferalCode(BuildContext context) {
+  return GoRouterState.of(context).uri.queryParameters['referal'];
+}
 
 class OpinionScreen extends StatefulWidget {
   final String? id;
@@ -105,17 +106,43 @@ class _SurveyScreenState extends State<SurveyScreen> {
   void answerSurvey() async {
     final answers = validator.answers.values;
 
-    await supabase.from('survey_answers').insert({
-      'answers': answers.map((e) => e.toJson()).toList(),
-      'survey_id': survey.id,
-    });
+    final referalCode = getReferalCode(context);
 
-    setState(() {
-      showResult = true;
-    });
-    Future.delayed(const Duration(seconds: 3), () {
-      GoRouter.of(context).go("/opinion/${survey.id}/result");
-    });
+    Future<void> answer() async {
+      try {
+        await supabase.from('survey_answers').insert({
+          'answers': answers.map((e) => e.toJson()).toList(),
+          'survey_id': survey.id,
+        });
+
+        setState(() {
+          showResult = true;
+        });
+
+        await Future.delayed(const Duration(seconds: 3));
+        GoRouter.of(context).go(
+          "/opinion/${survey.id}/result?referal=$referalCode",
+        );
+      } catch (e, s) {
+        print(e);
+        print(s);
+        rethrow;
+      }
+    }
+
+    bool hasError;
+    int i = 0;
+    const maxRetries = 3;
+    do {
+      hasError = false;
+      try {
+        await answer();
+      } catch (e) {
+        hasError = true;
+        await Future.delayed(const Duration(seconds: 3));
+      }
+      i++;
+    } while (hasError && i < maxRetries);
   }
 
   void fieldChanged() {

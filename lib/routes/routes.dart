@@ -1,8 +1,10 @@
 import 'package:go_router/go_router.dart';
-import 'package:web_mvp/features/opinion/screens/opinion_result_screen.dart';
 import 'package:web_mvp/features/opinion/opinion_screen.dart';
+import 'package:web_mvp/features/opinion/screens/opinion_result_screen.dart';
 import 'package:web_mvp/features/opinion/screens/ranking_screen.dart';
 import 'package:web_mvp/features/opinion/screens/referal_screen.dart';
+
+const initalSurvey = "2096122e-162e-4880-9ef6-7aeb56faf2ab";
 
 final GoRouter appRouter = GoRouter(
   routes: <RouteBase>[
@@ -39,7 +41,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: "/",
       redirect: (context, state) {
-        return "/opinion/2096122e-162e-4880-9ef6-7aeb56faf2ab";
+        return "/opinion/$initalSurvey";
       },
     ),
     GoRoute(
@@ -54,8 +56,8 @@ final GoRouter appRouter = GoRouter(
         GoRoute(
           path: 'result',
           builder: (context, state) {
-            final id = state.pathParameters['id'];
-            return OpinionResultScreen();
+            //    final id = state.pathParameters['id'];
+            return const OpinionResultScreen();
           },
         ),
       ],
@@ -63,6 +65,18 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: "/referal",
       builder: (context, state) => const ReferalScreen(),
+    ),
+    GoRoute(
+      path: "/referal/:code",
+      redirect: (context, state) {
+        final code = state.pathParameters['code'];
+
+        if (code != null) {
+          return "/opinion/$initalSurvey?referal=$code";
+        }
+
+        return "/";
+      },
     ),
     GoRoute(
       path: "/ranking",
