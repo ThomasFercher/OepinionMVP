@@ -13,7 +13,7 @@ class RankingScreen extends StatelessWidget {
       scrollable: true,
       child: Column(
         children: [
-          Image.asset("logo.png"),
+          Image.asset("images/logo.png"),
           16.vSpacing,
           Text(
             "Rangliste der Weiterempfehlungen",

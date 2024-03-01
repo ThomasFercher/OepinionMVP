@@ -48,7 +48,7 @@ class VerifcationOutstandingScreen extends StatelessWidget {
             ],
           ),
           32.vSpacing,
-          Image.asset("illustration_3.png"),
+          Image.asset("images/illustration_3.png"),
           32.vSpacing,
           Text(
             "Fast geschafft!",
@@ -85,7 +85,7 @@ class VerficationSuccessfullScreen extends StatelessWidget {
     return ScreenScaffold(
       child: Column(
         children: [
-          Image.asset("illustration_8.png"),
+          Image.asset("images/illustration_8.png"),
           32.vSpacing,
           Text(
             "Herzlichen Glückwunsch!",

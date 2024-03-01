@@ -18,14 +18,14 @@ class OpinionResultScreen extends StatelessWidget {
       scrollable: true,
       child: Column(
         children: [
-          Image.asset("logo.png"),
+          Image.asset("images/logo.png"),
           32.vSpacing,
           Text(
             "Vielen Dank!!!",
             style: context.typography.displayLarge,
           ),
           32.vSpacing,
-          Image.asset("illustration_1.png"),
+          Image.asset("images/illustration_1.png"),
           32.vSpacing,
           Text(
             "Dein Feedback ist in die Entwicklung unseres Tools eingeflossen, das Studierenden das Leben leichter macht. Deine Stimme trägt dazu bei, echte Veränderungen zu bewirken.",
@@ -43,7 +43,7 @@ class OpinionResultScreen extends StatelessWidget {
             style: context.typography.bodyMedium,
             textAlign: TextAlign.center,
           ),
-          Image.asset("illustration_2.png"),
+          Image.asset("images/illustration_2.png"),
           RaffleContainer(),
         ],
       ),

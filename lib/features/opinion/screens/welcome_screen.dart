@@ -28,7 +28,7 @@ class WelcomeScreen extends StatelessWidget {
       child: Column(
         children: [
           32.vSpacing,
-          Image.asset("logo.png"),
+          Image.asset("images/logo.png"),
           16.vSpacing,
           Text(
             "Herzlich Willkommen zur Marktforschung",
@@ -52,7 +52,7 @@ class WelcomeScreen extends StatelessWidget {
             ],
           ),
           32.vSpacing,
-          Image.asset("illustration_7.png"),
+          Image.asset("images/illustration_7.png"),
           32.vSpacing,
           Text(
             "Hier beginnt der Wandel in deiner akademischen Arbeit! Öpinion wird der Schlüssel zu deiner erfolgreichen Abschlussarbeit – schneller, effektiver, besser. ",
@@ -62,7 +62,7 @@ class WelcomeScreen extends StatelessWidget {
           32.vSpacing,
           button,
           64.vSpacing,
-          Image.asset("illustration_5.png"),
+          Image.asset("images/illustration_5.png"),
           32.vSpacing,
           Text(
             "Vergiss stundenlange Recherche und schlaflose Nächte. Mit Öpinion findest du das perfekte Thema, erstellst starke Umfragen und führst präzise Analysen durch. Zeit sparen, Qualität steigern, Spitzenleistungen erreichen – das ist unser Versprechen an dich.",
@@ -70,7 +70,7 @@ class WelcomeScreen extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           64.vSpacing,
-          Image.asset("illustration_6.png"),
+          Image.asset("images/illustration_6.png"),
           64.vSpacing,
           Text(
             "Außerdem, 🤫 nimm teil und sichere dir die Chance auf einen 100€ Amazon-Gutschein! Teile diese Umfrage und erhöhe deine Gewinnchancen auf einen zusätzlichen 50€ Amazon-Gutschein!",

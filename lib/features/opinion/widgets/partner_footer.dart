@@ -9,7 +9,7 @@ class PartnerFooter extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image.asset("logo_2.png"),
+        Image.asset("images/logo_2.png"),
         32.vSpacing,
         Text(
           "In stolzer Kooperation mit der FH Kärnten unter der Leitung von Herrn Mag. Dr. Thomas Fenzl",
@@ -17,7 +17,7 @@ class PartnerFooter extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         32.vSpacing,
-        Image.asset("prof.png"),
+        Image.asset("images/prof.png"),
       ],
     );
   }
