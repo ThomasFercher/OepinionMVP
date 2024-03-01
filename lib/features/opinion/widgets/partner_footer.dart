@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:web_mvp/common/extensions.dart';
+import 'package:oepinion/common/extensions.dart';
 
 class PartnerFooter extends StatelessWidget {
   const PartnerFooter({Key? key}) : super(key: key);

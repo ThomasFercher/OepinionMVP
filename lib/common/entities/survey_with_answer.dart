@@ -1,4 +1,4 @@
-import 'package:web_mvp/common/entities/survey.dart';
+import 'package:oepinion/common/entities/survey.dart';
 
 sealed class Answer {
   const Answer();

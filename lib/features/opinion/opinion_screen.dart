@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:web_mvp/common/entities/survey.dart';
-import 'package:web_mvp/common/extensions.dart';
-import 'package:web_mvp/features/opinion/notifiers.dart';
-import 'package:web_mvp/features/opinion/questions/multiple_choice_question_page.dart';
-import 'package:web_mvp/features/opinion/questions/radio_question_page.dart';
-import 'package:web_mvp/features/opinion/questions/range_question_page.dart';
-import 'package:web_mvp/features/opinion/questions/text_question_page.dart';
-import 'package:web_mvp/features/opinion/questions/yes_no_question_page.dart';
-import 'package:web_mvp/features/opinion/screens/captcha_screen.dart';
-import 'package:web_mvp/features/opinion/screens/finished_screen.dart';
-import 'package:web_mvp/features/opinion/screens/welcome_screen.dart';
-import 'package:web_mvp/features/opinion/validation.dart';
-import 'package:web_mvp/main.dart';
+import 'package:oepinion/common/entities/survey.dart';
+import 'package:oepinion/common/extensions.dart';
+import 'package:oepinion/features/opinion/notifiers.dart';
+import 'package:oepinion/features/opinion/questions/multiple_choice_question_page.dart';
+import 'package:oepinion/features/opinion/questions/radio_question_page.dart';
+import 'package:oepinion/features/opinion/questions/range_question_page.dart';
+import 'package:oepinion/features/opinion/questions/text_question_page.dart';
+import 'package:oepinion/features/opinion/questions/yes_no_question_page.dart';
+import 'package:oepinion/features/opinion/screens/captcha_screen.dart';
+import 'package:oepinion/features/opinion/screens/finished_screen.dart';
+import 'package:oepinion/features/opinion/screens/welcome_screen.dart';
+import 'package:oepinion/features/opinion/validation.dart';
+import 'package:oepinion/main.dart';
 
 String? getReferalCode(BuildContext context) {
   return GoRouterState.of(context).uri.queryParameters['referal'];

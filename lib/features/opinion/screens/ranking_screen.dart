@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:web_mvp/common/extensions.dart';
-import 'package:web_mvp/common/widgets/footer.dart';
-import 'package:web_mvp/common/widgets/screen_scaffold.dart';
-import 'package:web_mvp/features/opinion/widgets/partner_footer.dart';
+import 'package:oepinion/common/extensions.dart';
+import 'package:oepinion/common/widgets/footer.dart';
+import 'package:oepinion/common/widgets/screen_scaffold.dart';
+import 'package:oepinion/features/opinion/widgets/partner_footer.dart';
 
 class RankingScreen extends StatelessWidget {
   const RankingScreen({Key? key}) : super(key: key);

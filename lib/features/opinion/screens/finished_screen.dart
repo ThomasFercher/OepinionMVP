@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
-import 'package:web_mvp/common/extensions.dart';
+import 'package:oepinion/common/extensions.dart';
 
 class FinishedScreen extends StatelessWidget {
   const FinishedScreen({Key? key}) : super(key: key);

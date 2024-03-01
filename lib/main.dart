@@ -2,7 +2,7 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:web_mvp/routes/routes.dart';
+import 'package:oepinion/routes/routes.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 final supabase = Supabase.instance.client;

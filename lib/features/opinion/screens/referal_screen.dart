@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:web_mvp/common/auth/auth_service.dart';
-import 'package:web_mvp/common/extensions.dart';
-import 'package:web_mvp/common/widgets/footer.dart';
-import 'package:web_mvp/common/widgets/screen_scaffold.dart';
+import 'package:oepinion/common/auth/auth_service.dart';
+import 'package:oepinion/common/extensions.dart';
+import 'package:oepinion/common/widgets/footer.dart';
+import 'package:oepinion/common/widgets/screen_scaffold.dart';
 
 class ReferalScreen extends StatelessWidget {
   const ReferalScreen({Key? key}) : super(key: key);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:web_mvp/common/extensions.dart';
+import 'package:oepinion/common/extensions.dart';
 
 class ErrorContainer extends StatelessWidget {
   final String message;

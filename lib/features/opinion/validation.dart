@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:web_mvp/common/entities/survey.dart';
-import 'package:web_mvp/common/entities/survey_with_answer.dart';
+import 'package:oepinion/common/entities/survey.dart';
+import 'package:oepinion/common/entities/survey_with_answer.dart';
 
 class SurveyInfo extends InheritedWidget {
   final SurveyValidator validator;

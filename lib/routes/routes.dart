@@ -1,8 +1,8 @@
 import 'package:go_router/go_router.dart';
-import 'package:web_mvp/features/opinion/opinion_screen.dart';
-import 'package:web_mvp/features/opinion/screens/opinion_result_screen.dart';
-import 'package:web_mvp/features/opinion/screens/ranking_screen.dart';
-import 'package:web_mvp/features/opinion/screens/referal_screen.dart';
+import 'package:oepinion/features/opinion/opinion_screen.dart';
+import 'package:oepinion/features/opinion/screens/opinion_result_screen.dart';
+import 'package:oepinion/features/opinion/screens/ranking_screen.dart';
+import 'package:oepinion/features/opinion/screens/referal_screen.dart';
 
 const initalSurvey = "2096122e-162e-4880-9ef6-7aeb56faf2ab";
 

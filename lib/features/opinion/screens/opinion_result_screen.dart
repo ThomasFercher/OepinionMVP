@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:web_mvp/common/extensions.dart';
-import 'package:web_mvp/common/widgets/footer.dart';
-import 'package:web_mvp/common/widgets/screen_scaffold.dart';
-import 'package:web_mvp/features/opinion/questions/yes_no_question_page.dart';
-import 'package:web_mvp/features/opinion/widgets/partner_footer.dart';
-import 'package:web_mvp/main.dart';
-import 'package:web_mvp/routes/routes.dart';
+import 'package:oepinion/common/extensions.dart';
+import 'package:oepinion/common/widgets/footer.dart';
+import 'package:oepinion/common/widgets/screen_scaffold.dart';
+import 'package:oepinion/features/opinion/questions/yes_no_question_page.dart';
+import 'package:oepinion/features/opinion/widgets/partner_footer.dart';
+import 'package:oepinion/main.dart';
+import 'package:oepinion/routes/routes.dart';
 
 class OpinionResultScreen extends StatelessWidget {
   const OpinionResultScreen({Key? key}) : super(key: key);

@@ -1,11 +1,11 @@
 {
-    "name": "web_mvp",
-    "short_name": "web_mvp",
+    "name": "Öpinion",
+    "short_name": "Öpinion",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#DB231D",
+    "theme_color": "#DB231D",
+    "description": "A Survey App",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

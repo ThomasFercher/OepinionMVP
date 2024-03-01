@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:web_mvp/common/entities/survey.dart';
-import 'package:web_mvp/main.dart';
+import 'package:oepinion/common/entities/survey.dart';
+import 'package:oepinion/main.dart';
 
 class OpinionNotifier extends ChangeNotifier {
   Survey? survey;

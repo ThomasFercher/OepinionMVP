@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:web_mvp/routes/routes.dart';
+import 'package:oepinion/routes/routes.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({Key? key}) : super(key: key);
