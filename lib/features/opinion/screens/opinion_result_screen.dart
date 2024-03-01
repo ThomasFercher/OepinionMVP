@@ -86,7 +86,7 @@ class _RaffleContainerState extends State<RaffleContainer> {
       await supabase.auth.signInWithOtp(
         email: email,
         shouldCreateUser: true,
-        emailRedirectTo: "http://localhost:8080/verifiy",
+        emailRedirectTo: "https://oepinion.at/verifiy",
       );
 
       appRouter.go("/referal");
