@@ -14,9 +14,8 @@ class YesNoQuestionPage extends StatelessWidget {
 
   void answer(String answer, BuildContext context) {
     final validator = SurveyInfo.of(context).validator;
-
-    validator.validateField(question, true);
     validator.answer(question, TextAnswer(answer: answer));
+    validator.validateField(question, true);
   }
 
   @override

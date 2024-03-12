@@ -7,7 +7,7 @@ class Survey {
   final String description;
   final String id;
 
-  final List<Question> questions;
+  final Map<String, Question> questions;
 
   int get length => questions.length;
 
@@ -19,13 +19,15 @@ class Survey {
     return ((index) / length * 100).round();
   }
 
+  final List<Map<int, double>> _paths = [];
+
   Survey({
     required this.title,
     required this.description,
     required this.questions,
   }) : id = const Uuid().v4();
 
-  const Survey.withId({
+  Survey.withId({
     required this.title,
     required this.description,
     required this.id,
@@ -37,20 +39,18 @@ class Survey {
       'name': title,
       'description': description,
       'id': id,
-      'questions': questions.map((e) => e.toJson()).toList(),
+      'questions': questions.values.map((e) => e.toJson()).toList(),
     };
   }
 
   factory Survey.fromJSON(Json json) {
     try {
       return Survey.withId(
-        title: json['title'] as String,
-        description: json['description'] as String,
-        id: json['id'] as String,
-        questions: (json['questions'] as List).map((e) {
-          return Question.fromJson(e);
-        }).toList(),
-      );
+          title: json['title'] as String,
+          description: json['description'] as String,
+          id: json['id'] as String,
+          questions: {} // TODO: implement this
+          );
     } catch (e, s) {
       rethrow;
     }
@@ -59,9 +59,13 @@ class Survey {
 
 sealed class Question {
   final String question;
+  final String? destination;
+  final bool end;
 
   const Question({
     required this.question,
+    required this.end,
+    this.destination,
   });
 
   bool get handlesNav => false;
@@ -82,8 +86,16 @@ sealed class Question {
 }
 
 final class YesNoQuestion extends Question {
+  ///
+  /// If null is returned, the survey will continue as normal.
+  /// Else, the survey will skip to the question with the given index.
+  ///
+  final String? Function(bool answer)? skipToQuestion;
+
   const YesNoQuestion({
     required super.question,
+    this.skipToQuestion,
+    super.end = false,
   });
 
   @override
@@ -113,6 +125,8 @@ final class MultipleChoiceQuestion extends Question {
     required super.question,
     required this.choices,
     required this.allowMultiple,
+    super.destination,
+    super.end = false,
   });
 
   @override
@@ -145,7 +159,7 @@ final class RangeQuestion extends Question {
         (value, element) => value > element ? element : value,
       );
 
-  int get middle => choices.keys.toList()[((choices.length + 1) / 2).round()];
+  int get middle => choices.length ~/ 2;
 
   int get max => choices.keys.reduce(
         (value, element) => value < element ? element : value,
@@ -154,6 +168,7 @@ final class RangeQuestion extends Question {
   const RangeQuestion({
     required super.question,
     required this.choices,
+    super.end = false,
   });
 
   @override
@@ -189,6 +204,8 @@ extension on Map<String, dynamic> {
 final class TextQuestion extends Question {
   const TextQuestion({
     required super.question,
+    super.destination,
+    super.end = false,
   });
 
   @override
@@ -213,6 +230,8 @@ final class RadioQuestion extends Question {
   const RadioQuestion({
     required super.question,
     required this.choices,
+    super.destination,
+    super.end = false,
   });
 
   @override

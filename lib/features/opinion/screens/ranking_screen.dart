@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:oepinion/common/extensions.dart';
 import 'package:oepinion/common/widgets/footer.dart';
 import 'package:oepinion/common/widgets/screen_scaffold.dart';
@@ -13,11 +14,15 @@ class RankingScreen extends StatelessWidget {
       scrollable: true,
       child: Column(
         children: [
-          Image.asset("images/logo.png"),
+          16.vSpacing,
+          SvgPicture.asset(
+            "images/logo.svg",
+            width: 280,
+          ),
           16.vSpacing,
           Text(
             "Rangliste der Weiterempfehlungen",
-            style: context.typography.headlineMedium,
+            style: context.typography.headlineLarge,
             textAlign: TextAlign.center,
           ),
           48.vSpacing,
@@ -67,14 +72,14 @@ class RankingScreen extends StatelessWidget {
               );
             },
             separatorBuilder: (context, index) {
-              return Divider();
+              return const Divider();
             },
             itemCount: 10,
           ),
           96.vSpacing,
-          PartnerFooter(),
+          const PartnerFooter(),
           96.vSpacing,
-          Footer(),
+          const Footer(),
         ],
       ),
     );

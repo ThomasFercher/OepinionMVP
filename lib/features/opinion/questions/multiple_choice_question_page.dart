@@ -84,10 +84,12 @@ class _MultipleChoiceQuestionPageState
     }
   }
 
-  void answerChanged(String option) {
+  void answerChanged(String option) async {
     if (widget.question.allowMultiple) return;
 
     final valid = isValid;
+
+    await Future.delayed(const Duration(milliseconds: 100));
 
     validator.validateField(widget.question, valid);
 
@@ -111,7 +113,7 @@ class _MultipleChoiceQuestionPageState
           widget.question.question,
           style: context.typography.headlineSmall,
         ),
-        48.vSpacing,
+        32.vSpacing,
         Column(
           children: [
             for (final option in widget.question.choices)

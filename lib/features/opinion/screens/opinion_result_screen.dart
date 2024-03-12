@@ -1,13 +1,55 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:oepinion/common/colors.dart';
 import 'package:oepinion/common/extensions.dart';
 import 'package:oepinion/common/widgets/footer.dart';
 import 'package:oepinion/common/widgets/screen_scaffold.dart';
 import 'package:oepinion/features/opinion/questions/yes_no_question_page.dart';
+import 'package:oepinion/features/opinion/screens/welcome_screen.dart';
 import 'package:oepinion/features/opinion/widgets/partner_footer.dart';
 import 'package:oepinion/main.dart';
 import 'package:oepinion/routes/routes.dart';
+import 'dart:html';
+
+class IdRepository {
+  final Storage _localStorage = window.localStorage;
+
+  void save(bool v) {
+    _localStorage['asdlasd'] = v ? "a" : "b";
+  }
+
+  bool? getId() {
+    final val = _localStorage['asdlasd'];
+    if (val == "a") return true;
+    if (val == "b") return false;
+    return null;
+  }
+
+  void invalidate() {
+    _localStorage.remove('selected_id');
+  }
+}
+
+final hasParticipated = HasParticipatedNotifier();
+
+class HasParticipatedNotifier extends ChangeNotifier {
+  late final IdRepository _idRepository;
+  late bool _hasParticipated;
+
+  HasParticipatedNotifier() {
+    _idRepository = IdRepository();
+    _hasParticipated = _idRepository.getId() ?? false;
+    notifyListeners();
+  }
+
+  void setHasParticipated(bool value) {
+    _hasParticipated = value;
+    _idRepository.save(value);
+    notifyListeners();
+  }
+}
 
 class OpinionResultScreen extends StatelessWidget {
   const OpinionResultScreen({Key? key}) : super(key: key);
@@ -18,14 +60,22 @@ class OpinionResultScreen extends StatelessWidget {
       scrollable: true,
       child: Column(
         children: [
-          Image.asset("images/logo.png"),
+          SvgPicture.asset(
+            "images/logo.svg",
+            width: 320,
+          ),
           32.vSpacing,
           Text(
             "Vielen Dank!!!",
-            style: context.typography.displayLarge,
+            style: context.typography.headlineLarge?.copyWith(
+              fontSize: 64,
+            ),
           ),
           32.vSpacing,
-          Image.asset("images/illustration_1.png"),
+          Image.asset(
+            "$illustrationPath/i4.png",
+            width: 400,
+          ),
           32.vSpacing,
           Text(
             "Dein Feedback ist in die Entwicklung unseres Tools eingeflossen, das Studierenden das Leben leichter macht. Deine Stimme trägt dazu bei, echte Veränderungen zu bewirken.",
@@ -43,8 +93,19 @@ class OpinionResultScreen extends StatelessWidget {
             style: context.typography.bodyMedium,
             textAlign: TextAlign.center,
           ),
-          Image.asset("images/illustration_2.png"),
-          RaffleContainer(),
+          if (hasParticipated._hasParticipated) ...[
+            32.vSpacing,
+            BetterButton(
+              text: "Referal",
+              onPressed: () {
+                appRouter.go("/referal");
+              },
+              color: kBlue,
+            )
+          ] else ...[
+            Image.asset("$illustrationPath/i5.png"),
+            const RaffleContainer(),
+          ],
         ],
       ),
     );
@@ -88,7 +149,7 @@ class _RaffleContainerState extends State<RaffleContainer> {
         shouldCreateUser: true,
         emailRedirectTo: "https://oepinion.at/verifiy",
       );
-
+      hasParticipated.setHasParticipated(true);
       appRouter.go("/referal");
     } catch (e) {
       messenger.showSnackBar(
@@ -160,6 +221,8 @@ class _RaffleContainerState extends State<RaffleContainer> {
         96.vSpacing,
         const PartnerFooter(),
         96.vSpacing,
+        const SupportLink(),
+        32.vSpacing,
         const Footer(),
       ],
     );

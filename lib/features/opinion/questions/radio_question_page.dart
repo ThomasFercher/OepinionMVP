@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oepinion/common/colors.dart';
 import 'package:oepinion/common/entities/survey.dart';
 import 'package:oepinion/common/entities/survey_with_answer.dart';
 import 'package:oepinion/common/extensions.dart';
@@ -36,7 +37,7 @@ class RadioQuestionPage extends StatelessWidget {
             for (final choice in question.choices)
               BetterButton(
                 text: choice,
-                color: Colors.blueAccent,
+                color: kBlue,
                 onPressed: () => answer(choice, context),
               ),
           ],

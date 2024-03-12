@@ -43,6 +43,10 @@ class SurveyValidator extends ChangeNotifier {
     return _validQuestions[question]!;
   }
 
+  Answer getAnswer(Question question) {
+    return _answers[question]!;
+  }
+
   void answer(Question question, Answer answer) {
     _answers[question] = answer;
   }

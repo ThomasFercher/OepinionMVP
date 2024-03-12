@@ -14,12 +14,8 @@ class ErrorContainer extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: context.colors.errorContainer,
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(
-          color: context.colors.error,
-          width: 1,
-        ),
+        color: context.colors.errorContainer.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         children: [
@@ -28,10 +24,12 @@ class ErrorContainer extends StatelessWidget {
             color: context.colors.error,
           ),
           8.hSpacing,
-          Text(
-            message,
-            style: context.typography.bodyMedium?.copyWith(
-              color: context.colors.error,
+          Expanded(
+            child: Text(
+              message,
+              style: context.typography.bodySmall?.copyWith(
+                color: context.colors.error,
+              ),
             ),
           ),
         ],

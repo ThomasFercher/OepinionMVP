@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:oepinion/common/colors.dart';
 import 'package:oepinion/common/entities/survey.dart';
 import 'package:oepinion/common/entities/survey_with_answer.dart';
 import 'package:oepinion/common/extensions.dart';
@@ -68,22 +69,35 @@ class _TextQuestionPageState extends State<TextQuestionPage> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
           widget.question.question,
           style: context.typography.headlineSmall,
         ),
-        96.vSpacing,
+        48.vSpacing,
         TextField(
-          scrollPhysics: const NeverScrollableScrollPhysics(),
+          // scrollPhysics: const NeverScrollableScrollPhysics(),
           maxLength: 512,
-          maxLines: 8,
+          maxLines: 6,
+          style: context.typography.bodySmall?.copyWith(
+            color: kText,
+          ),
+
           controller: controller,
           inputFormatters: [
             MaxLinesTextInputFormatter(maxLines: 8),
           ],
           decoration: InputDecoration(
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 22,
+            ),
+            fillColor: kGray3,
+            hintText: "Was denkst du dazu?",
+            hintStyle: context.typography.bodySmall?.copyWith(color: kGray),
             border: OutlineInputBorder(
+              borderSide: BorderSide.none,
               borderRadius: BorderRadius.circular(8),
             ),
           ),
@@ -101,6 +115,7 @@ class _TextQuestionPageState extends State<TextQuestionPage> {
             );
           },
         ),
+        128.vSpacing,
       ],
     );
   }

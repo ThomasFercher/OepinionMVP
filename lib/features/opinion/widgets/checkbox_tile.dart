@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oepinion/common/colors.dart';
 import 'package:oepinion/common/extensions.dart';
 
 class CheckBoxTile extends StatelessWidget {
@@ -11,8 +12,9 @@ class CheckBoxTile extends StatelessWidget {
     required this.valueNotifier,
   });
 
-  void onSelected(bool? value) {
+  void onSelected(bool? value) async {
     if (value == null) return;
+
     valueNotifier.value = value;
   }
 
@@ -22,15 +24,13 @@ class CheckBoxTile extends StatelessWidget {
         valueListenable: valueNotifier,
         builder: (context, isSelected, snapshot) {
           return SizedBox(
-            height: 48,
+            height: 56,
             child: Material(
-              color: isSelected
-                  ? const Color(0xFF34C759)
-                  : const Color(0xFFF2F2F7),
+              color: isSelected ? kGreen : kGray3,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4),
                 side: BorderSide(
-                  color: isSelected ? Color(0xFF34C759) : Color(0xFFD9D9D9),
+                  color: isSelected ? kGreen : kGray2,
                   width: 1,
                 ),
               ),
@@ -42,20 +42,24 @@ class CheckBoxTile extends StatelessWidget {
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        title,
-                        style: context.typography.bodyMedium?.copyWith(
-                          color: isSelected ? Colors.white : null,
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: context.typography.bodyMedium?.copyWith(
+                            color: isSelected ? Colors.white : kGray,
+                          ),
                         ),
                       ),
                       Checkbox(
                         value: isSelected,
                         onChanged: onSelected,
-                        checkColor: const Color(0xFF8E8E93),
+                        checkColor: Colors.black54,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
                         ),
+                        visualDensity: VisualDensity.comfortable,
                         side: BorderSide.none,
                         fillColor: MaterialStateProperty.resolveWith((states) {
                           if (states.contains(MaterialState.selected)) {

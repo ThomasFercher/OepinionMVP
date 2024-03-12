@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:oepinion/common/colors.dart';
 import 'package:oepinion/common/entities/survey.dart';
+import 'package:oepinion/common/entities/survey_with_answer.dart';
 import 'package:oepinion/common/extensions.dart';
+import 'package:oepinion/common/widgets/screen_scaffold.dart';
 import 'package:oepinion/features/opinion/notifiers.dart';
 import 'package:oepinion/features/opinion/questions/multiple_choice_question_page.dart';
 import 'package:oepinion/features/opinion/questions/radio_question_page.dart';
@@ -67,7 +70,6 @@ class SurveyScreen extends StatefulWidget {
 }
 
 class _SurveyScreenState extends State<SurveyScreen> {
-  late final PageController _pageController;
   late final ValueNotifier<int> currentPage;
 
   final SurveyValidator validator = SurveyValidator();
@@ -82,8 +84,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
   @override
   void initState() {
-    _pageController = PageController(initialPage: 0);
-    currentPage = ValueNotifier(0)..addListener(onIndexChange);
+    currentPage = ValueNotifier(0);
     validator.addListener(fieldChanged);
     captchaSolved = false;
     showResult = false;
@@ -93,10 +94,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
   @override
   void dispose() {
-    _pageController.dispose();
-    currentPage
-      ..removeListener(onIndexChange)
-      ..dispose();
+    currentPage.dispose();
     validator
       ..removeListener(fieldChanged)
       ..dispose();
@@ -147,28 +145,34 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
   void fieldChanged() {
     final valid = validator.answerIsValid(currentQuestion);
+    String? nextPage;
+    if (currentQuestion is YesNoQuestion) {
+      final yesNoQuestion = currentQuestion as YesNoQuestion;
+      final answer = validator.getAnswer(currentQuestion);
+      if (answer is TextAnswer) {
+        final text = answer.answer.toLowerCase();
+        final yes = text == 'ja' || text == 'yes';
+        nextPage = yesNoQuestion.skipToQuestion?.call(yes);
+      }
+    }
 
-    final nextIndex = currentPage.value + 1;
+    nextPage ??= currentQuestion.destination;
+    final nextIndex = nextPage == null
+        ? currentPage.value + 1
+        : survey.questions.keys.toList().indexOf(nextPage);
 
-    if (nextIndex >= survey.questions.length) {
+    if (nextIndex >= survey.questions.length || currentQuestion.end) {
       answerSurvey();
       return;
     }
 
     if (valid) {
-      currentPage.value = currentPage.value + 1;
+      currentPage.value = nextIndex;
     }
   }
 
-  void onIndexChange() {
-    _pageController.animateToPage(
-      currentPage.value,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  Question get currentQuestion => survey.questions[currentPage.value];
+  Question get currentQuestion =>
+      survey.questions.values.toList()[currentPage.value];
 
   @override
   Widget build(BuildContext context) {
@@ -197,44 +201,20 @@ class _SurveyScreenState extends State<SurveyScreen> {
       child: Scaffold(
         body: Center(
           child: Container(
-            constraints: const BoxConstraints(maxWidth: 800),
-            padding: const EdgeInsets.all(32),
+            constraints: const BoxConstraints(maxWidth: 960),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
               children: [
-                16.vSpacing,
-                ValueListenableBuilder(
-                  valueListenable: currentPage,
-                  builder: (context, index, child) {
-                    if (index == survey.questions.length) {
-                      return const SizedBox.shrink();
-                    }
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "${survey.getPercentage(index)}%",
-                        ),
-                        4.vSpacing,
-                        LinearProgressIndicator(
-                          value: survey.getProgress(index),
-                          borderRadius: BorderRadius.circular(8),
-                          minHeight: 16,
-                        ),
-                      ],
-                    );
-                  },
-                ),
-                32.vSpacing,
+                24.vSpacing,
                 Expanded(
-                  child: PageView.builder(
-                    controller: _pageController,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      final question = survey.questions[index];
-
-                      return switch (question) {
+                  child: ValueListenableBuilder(
+                    valueListenable: currentPage,
+                    builder: (context, index, child) {
+                      if (index == survey.questions.length) {
+                        return const SizedBox.shrink();
+                      }
+                      final page = switch (currentQuestion) {
                         MultipleChoiceQuestion question =>
                           MultipleChoiceQuestionPage(question: question),
                         YesNoQuestion question =>
@@ -246,37 +226,99 @@ class _SurveyScreenState extends State<SurveyScreen> {
                         RadioQuestion question =>
                           RadioQuestionPage(question: question),
                       };
+
+                      final pageWidget = ScreenScaffold(
+                        maxWidth: 940,
+                        scrollable: switch (currentQuestion) {
+                          TextQuestion _ || MultipleChoiceQuestion _ => true,
+                          _ => false,
+                        },
+                        child: page,
+                      );
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 28),
+                            child: Text(
+                              "${survey.getPercentage(index)}%",
+                              style: context.typography.bodySmall?.copyWith(
+                                color: kGray,
+                              ),
+                            ),
+                          ),
+                          4.vSpacing,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            child: LinearProgressIndicator(
+                              value: survey.getProgress(index),
+                              borderRadius: BorderRadius.circular(8),
+                              minHeight: 12,
+                              color: kBlue,
+                              backgroundColor: kGray.withOpacity(0.1),
+                            ),
+                          ),
+                          32.vSpacing,
+                          Expanded(
+                            child: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 200),
+                              switchInCurve: Curves.easeInOut,
+                              switchOutCurve: Curves.easeInOut,
+                              transitionBuilder: (child, animation) {
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                );
+                              },
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                child: pageWidget,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
                     },
                   ),
                 ),
-                32.vSpacing,
-                ValueListenableBuilder(
-                  valueListenable: currentPage,
-                  builder: (context, index, child) {
-                    if (currentQuestion.handlesNav) {
-                      return const SizedBox.shrink();
-                    }
-                    return child!;
-                  },
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        validationNotifier.validate(currentQuestion);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          "Weiter",
-                          style: context.typography.bodyLarge?.copyWith(
-                            color: context.colors.primary,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 8,
+                    left: 8,
+                    right: 24,
+                    bottom: 24,
+                  ),
+                  child: ValueListenableBuilder(
+                    valueListenable: currentPage,
+                    builder: (context, index, child) {
+                      if (currentQuestion.handlesNav) {
+                        return const SizedBox.shrink();
+                      }
+                      return child!;
+                    },
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          validationNotifier.validate(currentQuestion);
+                        },
+                        style: TextButton.styleFrom(
+                          primary: kBlue,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text(
+                            "Weiter",
+                            style: context.typography.bodyLarge?.copyWith(
+                              color: kBlue,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
-                32.vSpacing,
               ],
             ),
           ),
