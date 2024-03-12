@@ -19,8 +19,6 @@ class Survey {
     return ((index) / length * 100).round();
   }
 
-  final List<Map<int, double>> _paths = [];
-
   Survey({
     required this.title,
     required this.description,
