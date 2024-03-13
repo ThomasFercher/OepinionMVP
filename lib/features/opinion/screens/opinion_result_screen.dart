@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:oepinion/common/auth/auth_service.dart';
 import 'package:oepinion/common/colors.dart';
 import 'package:oepinion/common/extensions.dart';
 import 'package:oepinion/common/widgets/footer.dart';
@@ -52,7 +55,12 @@ class HasParticipatedNotifier extends ChangeNotifier {
 }
 
 class OpinionResultScreen extends StatelessWidget {
-  const OpinionResultScreen({Key? key}) : super(key: key);
+  final String? referalCode;
+
+  const OpinionResultScreen({
+    Key? key,
+    required this.referalCode,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +76,7 @@ class OpinionResultScreen extends StatelessWidget {
           Text(
             "Vielen Dank!!!",
             style: context.typography.headlineLarge?.copyWith(
-              fontSize: 64,
+              fontSize: 58,
             ),
           ),
           32.vSpacing,
@@ -104,7 +112,9 @@ class OpinionResultScreen extends StatelessWidget {
             )
           ] else ...[
             Image.asset("$illustrationPath/i5.png"),
-            const RaffleContainer(),
+            RaffleContainer(
+              referalCode: referalCode,
+            ),
           ],
         ],
       ),
@@ -113,7 +123,9 @@ class OpinionResultScreen extends StatelessWidget {
 }
 
 class RaffleContainer extends StatefulWidget {
-  const RaffleContainer({Key? key}) : super(key: key);
+  final String? referalCode;
+  const RaffleContainer({Key? key, required this.referalCode})
+      : super(key: key);
 
   @override
   State<RaffleContainer> createState() => _RaffleContainerState();
@@ -147,11 +159,13 @@ class _RaffleContainerState extends State<RaffleContainer> {
       await supabase.auth.signInWithOtp(
         email: email,
         shouldCreateUser: true,
-        emailRedirectTo: "https://oepinion.at/verifiy",
+        emailRedirectTo:
+            "https://oepinion.at/verifiy${widget.referalCode != null ? "?referal=${widget.referalCode}" : ""}",
       );
+
       hasParticipated.setHasParticipated(true);
       appRouter.go("/referal");
-    } catch (e) {
+    } catch (e, s) {
       messenger.showSnackBar(
         SnackBar(
           content: Text("Fehler beim Teilnehmen: $e"),

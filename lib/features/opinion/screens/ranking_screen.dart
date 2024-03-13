@@ -4,9 +4,35 @@ import 'package:oepinion/common/extensions.dart';
 import 'package:oepinion/common/widgets/footer.dart';
 import 'package:oepinion/common/widgets/screen_scaffold.dart';
 import 'package:oepinion/features/opinion/widgets/partner_footer.dart';
+import 'package:oepinion/main.dart';
 
-class RankingScreen extends StatelessWidget {
+Future<List<(String, int)>> getRankings() async {
+  final result = await supabase
+      .from('referals')
+      .select('referal_count, nicknames(nickname)')
+      .order('referal_count', ascending: false)
+      .limit(10);
+
+  return result
+      .map((e) =>
+          (e['nicknames']['nickname'] as String, e['referal_count'] as int))
+      .toList();
+}
+
+class RankingScreen extends StatefulWidget {
   const RankingScreen({Key? key}) : super(key: key);
+
+  @override
+  State<RankingScreen> createState() => _RankingScreenState();
+}
+
+class _RankingScreenState extends State<RankingScreen> {
+  late final Future<List<(String, int)>> future;
+  @override
+  void initState() {
+    future = getRankings();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,34 +73,53 @@ class RankingScreen extends StatelessWidget {
             ],
           ),
           12.vSpacing,
-          ListView.separated(
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return Row(
-                children: [
-                  SizedBox(
-                    width: 48,
-                    child: Text(
-                      "${index + 1}",
-                      style: context.typography.bodyLarge,
+          FutureBuilder(
+            future: future,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const SizedBox(
+                  height: 100,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 4,
+                      strokeCap: StrokeCap.round,
                     ),
                   ),
-                  Text(
-                    "Max Mustermann",
-                    style: context.typography.bodyLarge,
-                  ),
-                  const Spacer(),
-                  Text(
-                    "10",
-                    style: context.typography.bodyLarge,
-                  ),
-                ],
+                );
+              }
+
+              final data = snapshot.data as List<(String, int)>? ?? [];
+
+              return ListView.separated(
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Row(
+                    children: [
+                      SizedBox(
+                        width: 48,
+                        child: Text(
+                          "${index + 1}",
+                          style: context.typography.bodyLarge,
+                        ),
+                      ),
+                      Text(
+                        data[index].$1,
+                        style: context.typography.bodyLarge,
+                      ),
+                      const Spacer(),
+                      Text(
+                        data[index].$2.toString(),
+                        style: context.typography.bodyLarge,
+                      ),
+                    ],
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return const Divider();
+                },
+                itemCount: data.length,
               );
             },
-            separatorBuilder: (context, index) {
-              return const Divider();
-            },
-            itemCount: 10,
           ),
           96.vSpacing,
           const PartnerFooter(),

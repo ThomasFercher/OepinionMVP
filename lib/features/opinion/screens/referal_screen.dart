@@ -30,8 +30,9 @@ class VerifcationOutstandingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenScaffold(
+      scrollable: true,
       child: Column(
-        mainAxisSize: MainAxisSize.max,
+        mainAxisSize: MainAxisSize.min,
         children: [
           32.vSpacing,
           Row(
@@ -39,20 +40,20 @@ class VerifcationOutstandingScreen extends StatelessWidget {
             children: [
               const Icon(
                 FontAwesomeIcons.clock,
-                size: 42,
-                color: Colors.blueAccent,
+                size: 36,
+                color: kBlue,
               ),
               16.hSpacing,
               Text(
                 "Verifizierung ausstehend",
                 style: context.typography.headlineMedium?.copyWith(
-                  color: Colors.blueAccent,
+                  color: kBlue,
                 ),
               )
             ],
           ),
           32.vSpacing,
-          Image.asset("$illustrationPath/i6.png", width: 400),
+          Image.asset("$illustrationPath/i6.png", height: 400),
           32.vSpacing,
           Text(
             "Fast geschafft!",
@@ -61,7 +62,7 @@ class VerifcationOutstandingScreen extends StatelessWidget {
           ),
           16.vSpacing,
           Text(
-            """Vielen Dank für deine Teilnahme am Gewinnspiel! Um deine Anmeldung abzuschließen, überprüfe bitte dein E-Mail-Postfach. Wir haben dir eine Bestätigungsmail gesendet. Klicke auf den darin enthaltenen Link, um deine E-Mail-Adresse zu verifizieren und deine Teilnahme zu bestätigen. 
+            """Vielen Dank für deine Teilnahme am Gewinnspiel! Um deine Anmeldung abzuschließen, überprüfe bitte dein E-Mail-Postfach. Wir haben dir eine Bestätigungsmail gesendet. Klicke auf den darin enthaltenen Link, um deine E-Mail-Adresse zu verifizieren und deine Teilnahme zu bestätigen.
       Falls du die E-Mail nicht findest, schaue bitte auch in deinem Spam-Ordner nach. 
       
       Sobald du verifiziert bist, nimmst du automatisch an der Verlosung des 100€ Amazon-Gutscheins teil. Wir wählen den Gewinner zufällig aus allen verifizierten Teilnehmern und kontaktieren diesen per Mail mit Ende der Laufzeit.
@@ -72,7 +73,6 @@ class VerifcationOutstandingScreen extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           32.vSpacing,
-          const Spacer(),
           const SupportLink(),
           32.vSpacing,
           const Footer(),
@@ -91,7 +91,7 @@ class VerficationSuccessfullScreen extends StatelessWidget {
 
     return ScreenScaffold(
       child: Column(
-        mainAxisSize: MainAxisSize.max,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -170,7 +170,6 @@ class VerficationSuccessfullScreen extends StatelessWidget {
             child: const Text("Zur Rangliste"),
           ),
           32.vSpacing,
-          const Spacer(),
           const SupportLink(),
           32.vSpacing,
           const Footer(),
