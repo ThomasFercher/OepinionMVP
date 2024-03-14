@@ -90,6 +90,7 @@ class VerficationSuccessfullScreen extends StatelessWidget {
     final referallLink = "oepinion.at/referal/${AuthService.user?.id}";
 
     return ScreenScaffold(
+      scrollable: true,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -169,7 +170,7 @@ class VerficationSuccessfullScreen extends StatelessWidget {
             ),
             child: const Text("Zur Rangliste"),
           ),
-          32.vSpacing,
+          96.vSpacing,
           const SupportLink(),
           32.vSpacing,
           const Footer(),

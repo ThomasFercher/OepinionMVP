@@ -3,7 +3,7 @@ import 'package:oepinion/common/entities/survey.dart';
 sealed class Answer {
   const Answer();
 
-  Json toJson();
+  Json toJson(Question question);
 
   Answer fromJson(Json json);
 }
@@ -16,9 +16,10 @@ final class TextAnswer extends Answer {
   });
 
   @override
-  Json toJson() {
+  Json toJson(Question question) {
     return {
       'answer': answer,
+      'id': question.id,
     };
   }
 
@@ -38,9 +39,10 @@ final class MultipleChoiceAnswer extends Answer {
   });
 
   @override
-  Json toJson() {
+  Json toJson(Question question) {
     return {
       'choices': choices,
+      'id': question.id,
     };
   }
 
@@ -60,9 +62,10 @@ final class RangeAnswer extends Answer {
   });
 
   @override
-  Json toJson() {
+  Json toJson(Question question) {
     return {
       'answer': answer,
+      'id': question.id,
     };
   }
 

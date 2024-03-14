@@ -26,12 +26,14 @@ final testSurvey = Survey.withId(
   id: "2096122e-162e-4880-9ef6-7aeb56faf2ab",
   title: "Öpinion Market Research",
   description: "Öpinion Market Research",
-  questions: {
-    "a": const YesNoQuestion(
+  questions: [
+    const YesNoQuestion(
       question:
           "Bist du aktuell als Student/in an einer österreichischen Hochschule eingeschrieben?",
+      id: "a",
     ),
-    "b": const MultipleChoiceQuestion(
+    const MultipleChoiceQuestion(
+      id: "b",
       question: "In welchem Studienabschnitt befindest du dich?",
       choices: [
         "Bachelor",
@@ -40,7 +42,8 @@ final testSurvey = Survey.withId(
       ],
       allowMultiple: false,
     ),
-    "c": YesNoQuestion(
+    YesNoQuestion(
+      id: "c",
       question:
           "Hast du bereits eigene Fragebogenstudien für Studienzwecke erstellt?",
       skipToQuestion: (answer) => switch (answer) {
@@ -48,7 +51,8 @@ final testSurvey = Survey.withId(
         _ => null,
       },
     ),
-    "d": const RangeQuestion(
+    const RangeQuestion(
+      id: "d",
       question: "Wie schwierig war es für dich, den Fragebogen zu erstellen?",
       choices: {
         1: "Sehr gering",
@@ -59,7 +63,8 @@ final testSurvey = Survey.withId(
         6: "Außergewöhnlich groß",
       },
     ),
-    "e": const RangeQuestion(
+    const RangeQuestion(
+      id: "e",
       question:
           "Wie schwierig war es für dich, die Ergebnisse aussagekräftig auszuwerten?",
       choices: {
@@ -71,18 +76,21 @@ final testSurvey = Survey.withId(
         6: "Außergewöhnlich groß",
       },
     ),
-    "f": const TextQuestion(
+    const TextQuestion(
+      id: "f",
       question:
           "Welche spezifischen Herausforderungen sind dir bei der Durchführung deiner Fragebogenstudie begegnet?",
     ),
-    "g": YesNoQuestion(
+    YesNoQuestion(
+      id: "g",
       question: "Arbeitest du aktuell an deiner Abschlussarbeit?",
       skipToQuestion: (answer) => switch (answer) {
         false => "a3",
         _ => null,
       },
     ),
-    "h": const MultipleChoiceQuestion(
+    const MultipleChoiceQuestion(
+      id: "h",
       question:
           "Wo würdest du dir durch ein KI-gestütztes Tool bei deiner Abschlussarbeit Unterstützung wünschen?",
       choices: [
@@ -96,7 +104,8 @@ final testSurvey = Survey.withId(
       ],
       allowMultiple: true,
     ),
-    "i": const RangeQuestion(
+    const RangeQuestion(
+      id: "i",
       question:
           "Wie wichtig wäre es für dich, Zugang zu einer Plattform zu bekommen, die dich beim gesamten Prozess deiner Abschlussarbeit unterstützt?",
       choices: {
@@ -108,15 +117,18 @@ final testSurvey = Survey.withId(
         6: "Äußerst wichtig",
       },
     ),
-    "j": const TextQuestion(
+    const TextQuestion(
+      id: "j",
       question:
           "Welche konkreten Funktionen sollte dieses Tool bieten, um dich optimal zu unterstützen?",
     ),
-    "k": const YesNoQuestion(
+    const YesNoQuestion(
+      id: "k",
       question:
           "Würdest du an einem persönlichen Gespräch teilnehmen, um deine Erfahrungen und Sichtweisen noch tiefer zu teilen und zu erläutern? ☕️",
     ),
-    "l": const MultipleChoiceQuestion(
+    const MultipleChoiceQuestion(
+      id: "l",
       question:
           "Bitte wähle noch deinen Studienbereich aus der folgenden Liste:",
       choices: [
@@ -140,7 +152,8 @@ final testSurvey = Survey.withId(
     ///
     /// First No PATH
     ///
-    "a2": const RangeQuestion(
+    const RangeQuestion(
+      id: "a2",
       question:
           "Wenn du eine Fragebogenstudie durchführen müsstest, wie schwierig schätzt du den Prozess ein?",
       choices: {
@@ -152,7 +165,8 @@ final testSurvey = Survey.withId(
         6: "Außergewöhnlich groß",
       },
     ),
-    "b2": const MultipleChoiceQuestion(
+    const MultipleChoiceQuestion(
+      id: "b2",
       question:
           "Mal angenommen, du müsstet nun deine Abschlussarbeit schreiben, in welchen Bereichen siehst du die größten Herausforderungen?",
       choices: [
@@ -171,7 +185,8 @@ final testSurvey = Survey.withId(
     ///
     /// Second No PATH
     ///
-    "a3": const MultipleChoiceQuestion(
+    const MultipleChoiceQuestion(
+      id: "a3",
       question:
           "In welchen der folgenden Bereiche hättest du dir mehr Unterstützung bei der Planung und Durchführung von Fragebogenstudien gewünscht?",
       choices: [
@@ -182,10 +197,11 @@ final testSurvey = Survey.withId(
       ],
       allowMultiple: true,
     ),
-    "b3": const TextQuestion(
+    const TextQuestion(
+      id: "b3",
       question:
           "Welche Unterstützung oder Ressourcen hätten dir bei deinen früheren Fragebogenstudien geholfen und warum?",
       destination: "i",
     ),
-  },
+  ],
 );

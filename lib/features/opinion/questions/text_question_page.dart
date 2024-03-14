@@ -57,12 +57,8 @@ class _TextQuestionPageState extends State<TextQuestionPage> {
     if (validationNotifier.current != widget.question) return;
 
     validNotifier.value = isValid;
-
+    validator.answer(widget.question, TextAnswer(answer: text));
     validator.validateField(widget.question, isValid);
-
-    if (isValid) {
-      validator.answer(widget.question, TextAnswer(answer: text));
-    }
   }
 
   @override

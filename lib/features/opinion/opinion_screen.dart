@@ -102,14 +102,14 @@ class _SurveyScreenState extends State<SurveyScreen> {
   }
 
   void answerSurvey() async {
-    final answers = validator.answers.values;
+    final answers = validator.answers.entries;
 
     final referalCode = getReferalCode(context);
 
     Future<void> answer() async {
       try {
         await supabase.from('survey_answers').insert({
-          'answers': answers.map((e) => e.toJson()).toList(),
+          'answers': answers.map((e) => e.value.toJson(e.key)).toList(),
           'survey_id': survey.id,
         });
 
@@ -159,7 +159,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
     nextPage ??= currentQuestion.destination;
     final nextIndex = nextPage == null
         ? currentPage.value + 1
-        : survey.questions.keys.toList().indexOf(nextPage);
+        : survey.questions.indexWhere((q) => q.id == nextPage);
 
     if (nextIndex >= survey.questions.length || currentQuestion.end) {
       answerSurvey();
@@ -171,8 +171,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
     }
   }
 
-  Question get currentQuestion =>
-      survey.questions.values.toList()[currentPage.value];
+  Question get currentQuestion => survey.questions[currentPage.value];
 
   @override
   Widget build(BuildContext context) {

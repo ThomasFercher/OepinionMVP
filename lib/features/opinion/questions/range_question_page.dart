@@ -47,15 +47,13 @@ class _RangeQuestionPageState extends State<RangeQuestionPage> {
 
   void validate() {
     if (validatorNotifier.current != widget.question) return;
-
-    validator.validateField(widget.question, true);
-
     validator.answer(
       widget.question,
       RangeAnswer(
         answer: valueNotifier.value.toInt(),
       ),
     );
+    validator.validateField(widget.question, true);
   }
 
   @override
@@ -68,7 +66,7 @@ class _RangeQuestionPageState extends State<RangeQuestionPage> {
           widget.question.question,
           style: context.typography.headlineSmall,
         ),
-        96.vSpacing,
+        48.vSpacing,
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(
@@ -84,7 +82,7 @@ class _RangeQuestionPageState extends State<RangeQuestionPage> {
             ],
           ),
         ),
-        48.vSpacing,
+        16.vSpacing,
         ValueListenableBuilder(
           valueListenable: valueNotifier,
           builder: (context, val, snapshot) {

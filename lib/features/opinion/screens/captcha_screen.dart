@@ -5,6 +5,14 @@ class CaptchaScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return const Center(
+      child: SizedBox(
+        width: 480,
+        height: 640,
+        child: HtmlElementView(
+          viewType: 'captchaView',
+        ),
+      ),
+    );
   }
 }

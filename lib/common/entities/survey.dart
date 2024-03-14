@@ -7,7 +7,7 @@ class Survey {
   final String description;
   final String id;
 
-  final Map<String, Question> questions;
+  final List<Question> questions;
 
   int get length => questions.length;
 
@@ -37,7 +37,7 @@ class Survey {
       'name': title,
       'description': description,
       'id': id,
-      'questions': questions.values.map((e) => e.toJson()).toList(),
+      'questions': questions.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -47,8 +47,9 @@ class Survey {
           title: json['title'] as String,
           description: json['description'] as String,
           id: json['id'] as String,
-          questions: {} // TODO: implement this
-          );
+          questions: (json['questions'] as List).map((e) {
+            return Question.fromJson(e as Json);
+          }).toList());
     } catch (e, s) {
       rethrow;
     }
@@ -59,11 +60,13 @@ sealed class Question {
   final String question;
   final String? destination;
   final bool end;
+  final String id;
 
   const Question({
     required this.question,
     required this.end,
     this.destination,
+    required this.id,
   });
 
   bool get handlesNav => false;
@@ -94,6 +97,7 @@ final class YesNoQuestion extends Question {
     required super.question,
     this.skipToQuestion,
     super.end = false,
+    required super.id,
   });
 
   @override
@@ -111,6 +115,7 @@ final class YesNoQuestion extends Question {
   factory YesNoQuestion.fromJson(Json json) {
     return YesNoQuestion(
       question: json['question'] as String,
+      id: json['id'] as String,
     );
   }
 }
@@ -125,6 +130,7 @@ final class MultipleChoiceQuestion extends Question {
     required this.allowMultiple,
     super.destination,
     super.end = false,
+    required super.id,
   });
 
   @override
@@ -146,6 +152,7 @@ final class MultipleChoiceQuestion extends Question {
       question: json['question'] as String,
       choices: (json['choices'] as List).cast<String>(),
       allowMultiple: json['allowMultiple'] as bool,
+      id: json['id'] as String,
     );
   }
 }
@@ -167,6 +174,7 @@ final class RangeQuestion extends Question {
     required super.question,
     required this.choices,
     super.end = false,
+    required super.id,
   });
 
   @override
@@ -183,6 +191,7 @@ final class RangeQuestion extends Question {
     return RangeQuestion(
       question: json['question'] as String,
       choices: (json['choices'] as Json).toRangeMap(),
+      id: json['id'] as String,
     );
   }
 }
@@ -204,6 +213,7 @@ final class TextQuestion extends Question {
     required super.question,
     super.destination,
     super.end = false,
+    required super.id,
   });
 
   @override
@@ -218,6 +228,7 @@ final class TextQuestion extends Question {
   factory TextQuestion.fromJson(Json json) {
     return TextQuestion(
       question: json['question'] as String,
+      id: json['id'] as String,
     );
   }
 }
@@ -230,6 +241,7 @@ final class RadioQuestion extends Question {
     required this.choices,
     super.destination,
     super.end = false,
+    required super.id,
   });
 
   @override
@@ -249,6 +261,7 @@ final class RadioQuestion extends Question {
     return RadioQuestion(
       question: json['question'] as String,
       choices: (json['choices'] as List).cast<String>(),
+      id: json['id'] as String,
     );
   }
 }

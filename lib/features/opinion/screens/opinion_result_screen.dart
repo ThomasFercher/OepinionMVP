@@ -76,8 +76,9 @@ class OpinionResultScreen extends StatelessWidget {
           Text(
             "Vielen Dank!!!",
             style: context.typography.headlineLarge?.copyWith(
-              fontSize: 58,
+              fontSize: 54,
             ),
+            textAlign: TextAlign.center,
           ),
           32.vSpacing,
           Image.asset(
@@ -208,10 +209,12 @@ class _RaffleContainerState extends State<RaffleContainer> {
               },
             ),
             8.hSpacing,
-            const Padding(
-              padding: EdgeInsets.only(top: 6),
-              child: Text(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed",
+            const Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(top: 6),
+                child: Text(
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed",
+                ),
               ),
             ),
           ],

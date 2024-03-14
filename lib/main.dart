@@ -1,13 +1,14 @@
+import 'dart:html';
+import 'dart:ui' as ui;
+
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:oepinion/common/colors.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:oepinion/routes/routes.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-
-import 'common/entities/survey.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:oepinion/common/colors.dart';
+import 'package:oepinion/routes/routes.dart';
 
 final supabase = Supabase.instance.client;
 
@@ -20,12 +21,37 @@ const iconPath = 'images/icons';
 void main() async {
   setUrlStrategy(PathUrlStrategy());
 
+//   ui.platformViewRegistry.registerViewFactory(
+//       'captchaView',
+//       (int viewId) => IFrameElement()
+//         ..width = '640'
+//         ..height = '360'
+//         ..srcdoc = '''
+//           <html>
+// <html>
+//   <head>
+//     <title>reCAPTCHA demo: Simple page</title>
+//     <script src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
+//   </head>
+//   <body>
+//     <form action="" method="POST">
+//       <div class="g-recaptcha" data-sitekey="6LfjBJgpAAAAAM-_tEXP63AfvD1qnwazKyEioqyT" data-action="LOGIN"></div>
+//       <br/>
+//       <input type="submit" value="Submit">
+//     </form>
+//   </body>
+// </html>
+//         '''
+//         ..style.border = 'none');
+
   await Supabase.initialize(
     url: 'https://dgrjnxiesxkgbyujipzy.supabase.co',
     anonKey: supabaseKey,
   );
 
-  runApp(const App());
+  runApp(
+    const App(),
+  );
 }
 
 void precacheAssets(BuildContext context) {

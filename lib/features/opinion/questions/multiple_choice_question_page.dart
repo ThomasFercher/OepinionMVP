@@ -77,11 +77,8 @@ class _MultipleChoiceQuestionPageState
 
     final valid = isValid;
 
+    validator.answer(widget.question, MultipleChoiceAnswer(choices: choices));
     validator.validateField(widget.question, valid);
-
-    if (valid) {
-      validator.answer(widget.question, MultipleChoiceAnswer(choices: choices));
-    }
   }
 
   void answerChanged(String option) async {

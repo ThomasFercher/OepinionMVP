@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:oepinion/features/about/about_screen.dart';
 import 'package:oepinion/features/opinion/opinion_screen.dart';
 import 'package:oepinion/features/opinion/screens/opinion_result_screen.dart';
 import 'package:oepinion/features/opinion/screens/ranking_screen.dart';
@@ -45,6 +46,7 @@ final GoRouter appRouter = GoRouter(
         return "/opinion/$initalSurvey";
       },
     ),
+    GoRoute(path: "/about", builder: (context, state) => const AboutScreen()),
     GoRoute(
       path: '/opinion/:id',
       builder: (context, state) {
