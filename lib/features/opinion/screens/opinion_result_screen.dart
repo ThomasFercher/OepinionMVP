@@ -16,6 +16,8 @@ import 'package:oepinion/main.dart';
 import 'package:oepinion/routes/routes.dart';
 import 'dart:html';
 
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 class IdRepository {
   final Storage _localStorage = window.localStorage;
 
@@ -161,7 +163,7 @@ class _RaffleContainerState extends State<RaffleContainer> {
         email: email,
         shouldCreateUser: true,
         emailRedirectTo:
-            "https://oepinion.at/verifiy${widget.referalCode != null ? "?referal=${widget.referalCode}" : ""}",
+            "https://oepinion.at/verifiy${widget.referalCode != null ? "?referal=${widget.referalCode}" : ""}&email=${Uri.encodeComponent(email)}",
       );
 
       hasParticipated.setHasParticipated(true);

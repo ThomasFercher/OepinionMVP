@@ -18,11 +18,15 @@ class Footer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                context.go("/data-policy");
+              },
               child: const Text("Datenschutz"),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                context.go("/raffle");
+              },
               child: const Text("Gewinnspiel"),
             ),
             TextButton(

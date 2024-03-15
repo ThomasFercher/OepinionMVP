@@ -82,6 +82,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
   Survey get survey => widget.survey;
 
+  List<String> questionHistory = [];
+
   @override
   void initState() {
     currentPage = ValueNotifier(0);
@@ -162,11 +164,13 @@ class _SurveyScreenState extends State<SurveyScreen> {
         : survey.questions.indexWhere((q) => q.id == nextPage);
 
     if (nextIndex >= survey.questions.length || currentQuestion.end) {
+      questionHistory.add(currentQuestion.id);
       answerSurvey();
       return;
     }
 
     if (valid) {
+      questionHistory.add(currentQuestion.id);
       currentPage.value = nextIndex;
     }
   }
@@ -201,6 +205,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
         body: Center(
           child: Container(
             constraints: const BoxConstraints(maxWidth: 960),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
@@ -232,6 +237,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                           TextQuestion _ || MultipleChoiceQuestion _ => true,
                           _ => false,
                         },
+                        padding: EdgeInsets.zero,
                         child: page,
                       );
 
@@ -239,24 +245,21 @@ class _SurveyScreenState extends State<SurveyScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 28),
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
                             child: Text(
-                              "${survey.getPercentage(index)}%",
+                              "${survey.getPercentage(questionHistory)}%",
                               style: context.typography.bodySmall?.copyWith(
                                 color: kGray,
                               ),
                             ),
                           ),
                           4.vSpacing,
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 24),
-                            child: LinearProgressIndicator(
-                              value: survey.getProgress(index),
-                              borderRadius: BorderRadius.circular(8),
-                              minHeight: 12,
-                              color: kBlue,
-                              backgroundColor: kGray.withOpacity(0.1),
-                            ),
+                          LinearProgressIndicator(
+                            value: survey.getProgress(questionHistory),
+                            borderRadius: BorderRadius.circular(8),
+                            minHeight: 12,
+                            color: kBlue,
+                            backgroundColor: kGray.withOpacity(0.1),
                           ),
                           32.vSpacing,
                           Expanded(

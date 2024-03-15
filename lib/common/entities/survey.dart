@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
 typedef Json = Map<String, dynamic>;
@@ -11,12 +12,55 @@ class Survey {
 
   int get length => questions.length;
 
-  double getProgress(int index) {
-    return (index) / length;
+  List<List<String>> getPath(String id) {
+    final question = questions.firstWhere((element) => element.id == id);
+    final index = questions.indexOf(question);
+
+    if (question.end) {
+      return [
+        [id]
+      ];
+    }
+
+    if (question is YesNoQuestion && question.skipToQuestion != null) {
+      final next1 = question.skipToQuestion!(true) ?? questions[index + 1].id;
+      final next2 = question.skipToQuestion!(false) ?? questions[index + 1].id;
+
+      return [
+        for (final path in getPath(next1)) [id, ...path],
+        for (final path in getPath(next2)) [id, ...path]
+      ];
+    }
+
+    final nextId = question.destination ?? questions[index + 1].id;
+
+    final nextPath = getPath(nextId);
+
+    return [
+      for (final path in nextPath) [id, ...path]
+    ];
   }
 
-  int getPercentage(int index) {
-    return ((index) / length * 100).round();
+  double getProgress(List<String> history) {
+    if (history.isEmpty) {
+      return 0;
+    }
+    final paths = getPath(questions.first.id);
+
+    for (final path in paths) {
+      final diff = path.length - history.length;
+      if (diff < 0) continue;
+      final subList = path.sublist(0, history.length);
+      if (listEquals(subList, history)) {
+        return history.length / path.length;
+      }
+    }
+
+    return 0;
+  }
+
+  int getPercentage(List<String> history) {
+    return (getProgress(history) * 100).toInt();
   }
 
   Survey({

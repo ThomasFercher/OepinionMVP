@@ -68,7 +68,7 @@ class _RangeQuestionPageState extends State<RangeQuestionPage> {
         ),
         48.vSpacing,
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

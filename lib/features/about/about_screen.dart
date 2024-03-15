@@ -42,7 +42,10 @@ class AboutScreen extends StatelessWidget {
             style: context.typography.bodyMedium,
           ),
           64.vSpacing,
-          Image.asset("$illustrationPath/i8.png"),
+          Image.asset(
+            "$illustrationPath/i8.png",
+            width: 400,
+          ),
           32.vSpacing,
           Text(
             "In unserer Marktforschung nutzen wir die Chance, um herauszufinden, welche Herausforderungen du bei Fragebogenstudien und deiner Abschlussarbeit erlebst. Es ist uns ein Anliegen, dass du nicht nur gehört wirst, sondern auch die Chance erhältst, für dein wertvolles Feedback belohnt zu werden.",
@@ -50,7 +53,10 @@ class AboutScreen extends StatelessWidget {
             style: context.typography.bodyMedium,
           ),
           64.vSpacing,
-          Image.asset("$illustrationPath/i9.png"),
+          Image.asset(
+            "$illustrationPath/i9.png",
+            width: 400,
+          ),
           32.vSpacing,
           Text(
             "Wir vom Team Öpinion, stehen dir zur Seite. Als leidenschaftliche Jungunternehmer aus Klagenfurt sind wir fest verwurzelt in der studentischen Gemeinschaft Österreichs. Wir verstehen deine Bedürfnisse und setzen uns dafür ein, dass du die bestmögliche Unterstützung in deiner Forschungsarbeit erhältst.",
@@ -58,7 +64,10 @@ class AboutScreen extends StatelessWidget {
             style: context.typography.bodyMedium,
           ),
           64.vSpacing,
-          Image.asset("$illustrationPath/i10.png"),
+          Image.asset(
+            "$illustrationPath/i10.png",
+            width: 400,
+          ),
           32.vSpacing,
           Text(
             "Unser Ziel ist es, ein SaaS-Tool zu entwickeln, das dich in jedem Schritt deiner Forschungsreise begleitet. Wir unterstützen dich bei der Themenfindung, der Hypothesenbildung, der Entwicklung deiner Forschungsstrategie, dem Erstellen von Umfragen, der Datenanalyse und beim akademischen Schreiben.",
@@ -66,7 +75,10 @@ class AboutScreen extends StatelessWidget {
             style: context.typography.bodyMedium,
           ),
           64.vSpacing,
-          Image.asset("$illustrationPath/i11.png"),
+          Image.asset(
+            "$illustrationPath/i11.png",
+            width: 400,
+          ),
           32.vSpacing,
           Text(
             "In Kooperation mit der FH Kärnten und geleitet von Herrn Mag. Dr. Fenzl, gewährleisten wir, dass unsere Marktforschung den höchsten akademischen Standards entspricht und dir praktischen Nutzen bietet.",

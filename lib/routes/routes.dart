@@ -1,10 +1,13 @@
 import 'package:go_router/go_router.dart';
 import 'package:oepinion/features/about/about_screen.dart';
+import 'package:oepinion/features/data_policy/data_policy_screen.dart';
+import 'package:oepinion/features/data_policy/raffle_screen.dart';
 import 'package:oepinion/features/opinion/opinion_screen.dart';
 import 'package:oepinion/features/opinion/screens/opinion_result_screen.dart';
 import 'package:oepinion/features/opinion/screens/ranking_screen.dart';
 import 'package:oepinion/features/opinion/screens/referal_screen.dart';
 import 'package:oepinion/main.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 const initalSurvey = "2096122e-162e-4880-9ef6-7aeb56faf2ab";
 
@@ -47,6 +50,13 @@ final GoRouter appRouter = GoRouter(
       },
     ),
     GoRoute(path: "/about", builder: (context, state) => const AboutScreen()),
+    GoRoute(
+        path: "/data-policy",
+        builder: (context, state) => const DataPolicyScreen()),
+    GoRoute(
+        path: "/raffle",
+        builder: (context, state) => const RafflePolicyScreen()),
+
     GoRoute(
       path: '/opinion/:id',
       builder: (context, state) {
@@ -91,25 +101,38 @@ final GoRouter appRouter = GoRouter(
       path: "/verifiy",
       redirect: (context, state) async {
         final code = state.uri.queryParameters['code'];
-        final referal = state.uri.queryParameters['referal'];
+        final email = state.uri.queryParameters['email'];
 
-        if (referal != null && referal != "null") {
+        if (email == null || code == null) {
+          return "/";
+        }
+
+        final decodedEmail = Uri.decodeComponent(email);
+
+        if (supabase.auth.currentUser == null) {
+          final AuthResponse result;
           try {
-            await supabase.rpc(
-              "update_referals",
-              params: {
-                "id": '$referal',
-              },
+            result = await supabase.auth.verifyOTP(
+              token: code,
+              email: decodedEmail,
+              type: OtpType.email,
             );
           } catch (e) {
-            print(e);
+            return "/";
+          }
+
+          if (result.user == null) {
+            return "/";
           }
         }
 
-        //TODO: update supabase counter
+        final referal = state.uri.queryParameters['referal'];
 
-        if (code == null) {
-          return "/";
+        if (referal != null && referal != "null") {
+          await supabase.rpc(
+            "update_referals",
+            params: {"id": referal},
+          );
         }
 
         return "/referal";

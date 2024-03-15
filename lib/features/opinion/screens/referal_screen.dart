@@ -98,7 +98,7 @@ class VerficationSuccessfullScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Image.asset(
               "$illustrationPath/i7.png",
-              width: 520,
+              width: 400,
             ),
           ),
           Text(
