@@ -87,7 +87,7 @@ class VerficationSuccessfullScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final referallLink = "oepinion.at/referal/${AuthService.user?.id}";
+    final referallLink = "https://oepinion.at/referal/${AuthService.user?.id}";
 
     return ScreenScaffold(
       scrollable: true,

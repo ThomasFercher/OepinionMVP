@@ -47,6 +47,9 @@ void main() async {
   await Supabase.initialize(
     url: 'https://dgrjnxiesxkgbyujipzy.supabase.co',
     anonKey: supabaseKey,
+    authOptions: const FlutterAuthClientOptions(
+      authFlowType: AuthFlowType.implicit,
+    ),
   );
 
   runApp(
