@@ -41,7 +41,7 @@ class Survey {
     ];
   }
 
-  double getProgress(List<String> history) {
+  double getProgress(Iterable<String> history) {
     if (history.isEmpty) {
       return 0;
     }
@@ -51,7 +51,7 @@ class Survey {
       final diff = path.length - history.length;
       if (diff < 0) continue;
       final subList = path.sublist(0, history.length);
-      if (listEquals(subList, history)) {
+      if (listEquals(subList, history.toList())) {
         return history.length / path.length;
       }
     }
@@ -59,8 +59,8 @@ class Survey {
     return 0;
   }
 
-  int getPercentage(List<String> history) {
-    return (getProgress(history) * 100).toInt();
+  int getPercentage(Iterable<String> history) {
+    return (getProgress(history.toList()) * 100).toInt();
   }
 
   Survey({
@@ -125,6 +125,8 @@ sealed class Question {
       'range' => RangeQuestion.fromJson(json),
       'text' => TextQuestion.fromJson(json),
       'radio' => RadioQuestion.fromJson(json),
+      'dropdown' => DropDownQuestion.fromJson(json),
+      'placeholder' => PlaceHolderQuestion.fromJson(json),
       _ => throw Exception('Unknown question type'),
     };
   }
@@ -178,7 +180,7 @@ final class MultipleChoiceQuestion extends Question {
   });
 
   @override
-  bool get handlesNav => allowMultiple == false;
+  bool get handlesNav => false;
 
   @override
   Json toJson() {
@@ -307,5 +309,52 @@ final class RadioQuestion extends Question {
       choices: (json['choices'] as List).cast<String>(),
       id: json['id'] as String,
     );
+  }
+}
+
+final class DropDownQuestion extends Question {
+  final List<String> choices;
+
+  const DropDownQuestion({
+    required super.question,
+    required this.choices,
+    super.destination,
+    super.end = false,
+    required super.id,
+  });
+
+  @override
+  Json toJson() {
+    return {
+      'type': 'dropdown',
+      'question': question,
+      'choices': choices,
+    };
+  }
+
+  @override
+  factory DropDownQuestion.fromJson(Json json) {
+    return DropDownQuestion(
+      question: json['question'] as String,
+      choices: (json['choices'] as List).cast<String>(),
+      id: json['id'] as String,
+    );
+  }
+}
+
+final class PlaceHolderQuestion extends Question {
+  const PlaceHolderQuestion(String id, bool end)
+      : super(question: '', end: end, id: id, destination: null);
+
+  @override
+  Json toJson() {
+    return {
+      'type': 'placeholder',
+    };
+  }
+
+  @override
+  factory PlaceHolderQuestion.fromJson(Json json) {
+    return PlaceHolderQuestion(json['id'] as String, json['end'] as bool);
   }
 }

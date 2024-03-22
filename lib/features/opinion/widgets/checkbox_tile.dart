@@ -4,7 +4,7 @@ import 'package:oepinion/common/extensions.dart';
 
 class CheckBoxTile extends StatelessWidget {
   final String title;
-  final ValueNotifier<bool> valueNotifier;
+  final ValueNotifier<bool?> valueNotifier;
 
   const CheckBoxTile({
     super.key,
@@ -22,7 +22,8 @@ class CheckBoxTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
         valueListenable: valueNotifier,
-        builder: (context, isSelected, snapshot) {
+        builder: (context, _, snapshot) {
+          final isSelected = valueNotifier.value ?? false;
           return SizedBox(
             height: 56,
             child: Material(
@@ -35,7 +36,7 @@ class CheckBoxTile extends StatelessWidget {
                 ),
               ),
               child: InkWell(
-                onTap: () => onSelected(!valueNotifier.value),
+                onTap: () => onSelected(!isSelected),
                 borderRadius: BorderRadius.circular(4),
                 child: Padding(
                   padding:

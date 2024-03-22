@@ -27,10 +27,14 @@ final testSurvey = Survey.withId(
   title: "Öpinion Market Research",
   description: "Öpinion Market Research",
   questions: [
-    const YesNoQuestion(
+    YesNoQuestion(
       question:
           "Bist du aktuell als Student/in an einer österreichischen Hochschule eingeschrieben?",
       id: "a",
+      skipToQuestion: (answer) => switch (answer) {
+        false => "a4",
+        _ => null,
+      },
     ),
     const MultipleChoiceQuestion(
       id: "b",
@@ -55,12 +59,12 @@ final testSurvey = Survey.withId(
       id: "d",
       question: "Wie schwierig war es für dich, den Fragebogen zu erstellen?",
       choices: {
-        1: "Sehr gering",
-        2: "Gering",
+        1: "Sehr leicht",
+        2: "Leicht",
         3: "Mittelmäßig",
-        4: "Hoch",
-        5: "Sehr groß",
-        6: "Außergewöhnlich groß",
+        4: "Schwer",
+        5: "Sehr schwer",
+        6: "Außergewöhnlich schwer",
       },
     ),
     const RangeQuestion(
@@ -68,12 +72,12 @@ final testSurvey = Survey.withId(
       question:
           "Wie schwierig war es für dich, die Ergebnisse aussagekräftig auszuwerten?",
       choices: {
-        1: "Sehr gering",
-        2: "Gering",
+        1: "Sehr leicht",
+        2: "Leicht",
         3: "Mittelmäßig",
-        4: "Hoch",
-        5: "Sehr groß",
-        6: "Außergewöhnlich groß",
+        4: "Schwer",
+        5: "Sehr schwer",
+        6: "Außergewöhnlich schwer",
       },
     ),
     const TextQuestion(
@@ -127,7 +131,7 @@ final testSurvey = Survey.withId(
       question:
           "Würdest du an einem persönlichen Gespräch teilnehmen, um deine Erfahrungen und Sichtweisen noch tiefer zu teilen und zu erläutern? ☕️",
     ),
-    const MultipleChoiceQuestion(
+    const DropDownQuestion(
       id: "l",
       question:
           "Bitte wähle noch deinen Studienbereich aus der folgenden Liste:",
@@ -145,7 +149,6 @@ final testSurvey = Survey.withId(
         "Theologische Studien",
         "Umwelt- und Agrarwissenschaften (z.B. Agrartechnologie)",
       ],
-      allowMultiple: false,
       end: true,
     ),
 
@@ -203,5 +206,10 @@ final testSurvey = Survey.withId(
           "Welche Unterstützung oder Ressourcen hätten dir bei deinen früheren Fragebogenstudien geholfen und warum?",
       destination: "i",
     ),
+
+    ///
+    /// Third No PATH
+    ///
+    const PlaceHolderQuestion("a4", true),
   ],
 );

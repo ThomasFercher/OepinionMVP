@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oepinion/common/colors.dart';
 
 class ScreenScaffold extends StatelessWidget {
   final Widget child;
@@ -26,10 +27,26 @@ class ScreenScaffold extends StatelessWidget {
         ),
       ),
     );
+    final scrollController = ScrollController();
     return Scaffold(
       body: scrollable
-          ? SingleChildScrollView(
-              child: _child,
+          ? ScrollbarTheme(
+              data: ScrollbarThemeData(
+                thumbColor: MaterialStateProperty.all(kGray),
+                trackVisibility: const MaterialStatePropertyAll(true),
+                trackColor: const MaterialStatePropertyAll(Colors.transparent),
+                thumbVisibility: const MaterialStatePropertyAll(true),
+                thickness: const MaterialStatePropertyAll(8),
+                trackBorderColor:
+                    const MaterialStatePropertyAll(Colors.transparent),
+              ),
+              child: Scrollbar(
+                controller: scrollController,
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: _child,
+                ),
+              ),
             )
           : _child,
     );

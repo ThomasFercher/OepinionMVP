@@ -3,6 +3,7 @@ import 'package:oepinion/features/about/about_screen.dart';
 import 'package:oepinion/features/data_policy/data_policy_screen.dart';
 import 'package:oepinion/features/data_policy/raffle_screen.dart';
 import 'package:oepinion/features/opinion/opinion_screen.dart';
+import 'package:oepinion/features/opinion/screens/declined_page.dart';
 import 'package:oepinion/features/opinion/screens/opinion_result_screen.dart';
 import 'package:oepinion/features/opinion/screens/ranking_screen.dart';
 import 'package:oepinion/features/opinion/screens/referal_screen.dart';
@@ -70,8 +71,11 @@ final GoRouter appRouter = GoRouter(
           path: 'result',
           builder: (context, state) {
             final referalCode = state.uri.queryParameters['referal'];
+            final interviewS = state.uri.queryParameters['interview'];
+            final interview = interviewS == "true";
             return OpinionResultScreen(
               referalCode: referalCode,
+              interview: interview,
             );
           },
         ),
@@ -96,6 +100,12 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: "/ranking",
       builder: (context, state) => const RankingScreen(),
+    ),
+    GoRoute(
+      path: "/declined",
+      builder: (context, state) {
+        return const DeclinedScreen();
+      },
     ),
     GoRoute(
       path: "/verifiy",

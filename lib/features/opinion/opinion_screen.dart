@@ -6,6 +6,7 @@ import 'package:oepinion/common/entities/survey_with_answer.dart';
 import 'package:oepinion/common/extensions.dart';
 import 'package:oepinion/common/widgets/screen_scaffold.dart';
 import 'package:oepinion/features/opinion/notifiers.dart';
+import 'package:oepinion/features/opinion/questions/dropdown_question_page.dart';
 import 'package:oepinion/features/opinion/questions/multiple_choice_question_page.dart';
 import 'package:oepinion/features/opinion/questions/radio_question_page.dart';
 import 'package:oepinion/features/opinion/questions/range_question_page.dart';
@@ -16,6 +17,7 @@ import 'package:oepinion/features/opinion/screens/finished_screen.dart';
 import 'package:oepinion/features/opinion/screens/welcome_screen.dart';
 import 'package:oepinion/features/opinion/validation.dart';
 import 'package:oepinion/main.dart';
+import 'package:collection/collection.dart';
 
 String? getReferalCode(BuildContext context) {
   return GoRouterState.of(context).uri.queryParameters['referal'];
@@ -82,7 +84,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
   Survey get survey => widget.survey;
 
-  List<String> questionHistory = [];
+  Set<String> questionHistory = {};
 
   @override
   void initState() {
@@ -104,7 +106,11 @@ class _SurveyScreenState extends State<SurveyScreen> {
   }
 
   void answerSurvey() async {
-    final answers = validator.answers.entries;
+    final answers = validator.answers.entries.toList();
+
+    final interviewAnswer = answers.singleWhereOrNull((e) => e.key.id == "k");
+    final bool interview = interviewAnswer?.value is TextAnswer &&
+        (interviewAnswer?.value as TextAnswer).answer.toLowerCase() == 'ja';
 
     final referalCode = getReferalCode(context);
 
@@ -121,7 +127,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
         await Future.delayed(const Duration(seconds: 3));
         GoRouter.of(context).go(
-          "/opinion/${survey.id}/result?referal=$referalCode",
+          "/opinion/${survey.id}/result?referal=$referalCode${interview == true ? '&interview=true' : ''}",
         );
       } catch (e, s) {
         print(e);
@@ -163,13 +169,19 @@ class _SurveyScreenState extends State<SurveyScreen> {
         ? currentPage.value + 1
         : survey.questions.indexWhere((q) => q.id == nextPage);
 
-    if (nextIndex >= survey.questions.length || currentQuestion.end) {
-      questionHistory.add(currentQuestion.id);
-      answerSurvey();
+    final nextQuestion = survey.questions[nextIndex];
+    if (nextQuestion is PlaceHolderQuestion) {
+      context.go("/declined");
       return;
     }
 
     if (valid) {
+      if (nextIndex >= survey.questions.length || currentQuestion.end) {
+        questionHistory.add(currentQuestion.id);
+        answerSurvey();
+        return;
+      }
+
       questionHistory.add(currentQuestion.id);
       currentPage.value = nextIndex;
     }
@@ -229,6 +241,9 @@ class _SurveyScreenState extends State<SurveyScreen> {
                           TextQuestionPage(question: question),
                         RadioQuestion question =>
                           RadioQuestionPage(question: question),
+                        DropDownQuestion question =>
+                          DropdownQuestionPage(question: question),
+                        PlaceHolderQuestion _ => throw UnimplementedError(),
                       };
 
                       final pageWidget = ScreenScaffold(
@@ -284,30 +299,48 @@ class _SurveyScreenState extends State<SurveyScreen> {
                     },
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 8,
-                    left: 8,
-                    right: 24,
-                    bottom: 24,
-                  ),
-                  child: ValueListenableBuilder(
-                    valueListenable: currentPage,
-                    builder: (context, index, child) {
-                      if (currentQuestion.handlesNav) {
-                        return const SizedBox.shrink();
-                      }
-                      return child!;
-                    },
-                    child: Align(
-                      alignment: Alignment.centerRight,
+                4.vSpacing,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ValueListenableBuilder(
+                      valueListenable: currentPage,
+                      builder: (context, index, child) {
+                        if (index == 0) {
+                          return const SizedBox.shrink();
+                        }
+                        return child!;
+                      },
+                      child: TextButton(
+                        onPressed: () {
+                          questionHistory.remove(questionHistory.last);
+                          currentPage.value = currentPage.value - 1;
+                        },
+                        style: TextButton.styleFrom(primary: kBlue),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text(
+                            "Zurück",
+                            style: context.typography.bodyLarge?.copyWith(
+                              color: kBlue,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    ValueListenableBuilder(
+                      valueListenable: currentPage,
+                      builder: (context, index, child) {
+                        if (currentQuestion.handlesNav) {
+                          return const SizedBox.shrink();
+                        }
+                        return child!;
+                      },
                       child: TextButton(
                         onPressed: () {
                           validationNotifier.validate(currentQuestion);
                         },
-                        style: TextButton.styleFrom(
-                          primary: kBlue,
-                        ),
+                        style: TextButton.styleFrom(primary: kBlue),
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: Text(
@@ -319,8 +352,9 @@ class _SurveyScreenState extends State<SurveyScreen> {
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
+                24.vSpacing,
               ],
             ),
           ),

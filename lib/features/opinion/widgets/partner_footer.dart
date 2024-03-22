@@ -13,13 +13,13 @@ class PartnerFooter extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 48),
           child: Image.asset(
-            "$illustrationPath/fh.png",
+            "$illustrationPath/fh_logo.png",
             width: 424,
           ),
         ),
         42.vSpacing,
         Text(
-          "In stolzer Kooperation mit der FH Kärnten unter der Leitung von Herrn Mag. Dr. Thomas Fenzl",
+          "In Kooperation mit der School of Management der Fachhochschule Kärnten unter Leitung von Prof. Dr. Thomas Fenzl",
           style: context.typography.bodyLarge,
           textAlign: TextAlign.center,
         ),

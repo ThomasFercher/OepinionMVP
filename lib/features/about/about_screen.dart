@@ -39,7 +39,9 @@ class AboutScreen extends StatelessWidget {
           Text(
             "Bei Öpinion glauben wir an die Kraft der Gemeinschaft. Wir sind überzeugt, dass wir gemeinsam mit dir die akademische Forschung neu gestalten können. Unsere Mission ist es, dir zuzuhören, von dir zu lernen und dir Werkzeuge an die Hand zu geben, die dich in deinem akademischen Streben voranbringen.",
             textAlign: TextAlign.center,
-            style: context.typography.bodyMedium,
+            style: context.typography.bodyLarge?.copyWith(
+              fontStyle: FontStyle.italic,
+            ),
           ),
           64.vSpacing,
           Image.asset(

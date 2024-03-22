@@ -66,7 +66,11 @@ void precacheAssets(BuildContext context) {
     "$illustrationPath/i5.png",
     "$illustrationPath/i6.png",
     "$illustrationPath/i7.png",
-    "$illustrationPath/fh.png",
+    "$illustrationPath/i8.png",
+    "$illustrationPath/i9.png",
+    "$illustrationPath/i10.png",
+    "$illustrationPath/i11.png",
+    "$illustrationPath/fh_logo.png",
     "$illustrationPath/fenzl.png",
   ];
 

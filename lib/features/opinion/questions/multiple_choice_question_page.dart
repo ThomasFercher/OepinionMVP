@@ -26,12 +26,12 @@ class _MultipleChoiceQuestionPageState
   late SurveyValidator validator;
   late SurveyValidationNotifier validationNotifier;
 
-  late Map<String, ValueNotifier<bool>> valueNotifiers;
+  late Map<String, ValueNotifier<bool?>> valueNotifiers;
   late ValueNotifier<bool?> validNotifier;
 
   Map<String, bool> get values => {
         for (final entry in valueNotifiers.entries)
-          entry.key: entry.value.value,
+          entry.key: entry.value.value ?? false,
       };
 
   List<String> get choices {
@@ -82,23 +82,22 @@ class _MultipleChoiceQuestionPageState
   }
 
   void answerChanged(String option) async {
-    if (widget.question.allowMultiple) return;
-
-    final valid = isValid;
-
-    await Future.delayed(const Duration(milliseconds: 100));
-
-    validator.validateField(widget.question, valid);
-
-    if (valid) {
-      validator.answer(widget.question, MultipleChoiceAnswer(choices: choices));
+    if (widget.question.allowMultiple) {
+      return;
     }
-    // if (valueNotifiers[option]!.value == false) return;
 
-    // for (final entry in valueNotifiers.entries) {
-    //   if (entry.key == option) continue;
-    //   entry.value.value = false;
-    // }
+    final notifier = valueNotifiers[option]!;
+
+    if (notifier.value == null) return;
+
+    final nonSelected = valueNotifiers.entries
+        .where((entry) => entry.key != option)
+        .map((entry) => entry.value)
+        .toList();
+
+    for (final notifier in nonSelected) {
+      notifier.value = null;
+    }
   }
 
   @override
@@ -110,6 +109,17 @@ class _MultipleChoiceQuestionPageState
           widget.question.question,
           style: context.typography.headlineSmall,
         ),
+        16.vSpacing,
+        if (widget.question.allowMultiple)
+          Text(
+            "Wählen Sie eine oder mehrere Antworten",
+            style: context.typography.bodySmall,
+          )
+        else
+          Text(
+            "Wählen Sie eine Antwort",
+            style: context.typography.bodySmall,
+          ),
         32.vSpacing,
         Column(
           children: [

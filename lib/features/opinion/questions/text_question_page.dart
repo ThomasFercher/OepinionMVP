@@ -76,7 +76,7 @@ class _TextQuestionPageState extends State<TextQuestionPage> {
           // scrollPhysics: const NeverScrollableScrollPhysics(),
           maxLength: 512,
           maxLines: 6,
-          style: context.typography.bodySmall?.copyWith(
+          style: context.typography.bodyMedium?.copyWith(
             color: kText,
           ),
 
@@ -91,7 +91,7 @@ class _TextQuestionPageState extends State<TextQuestionPage> {
             ),
             fillColor: kGray3,
             hintText: "Was denkst du dazu?",
-            hintStyle: context.typography.bodySmall?.copyWith(color: kGray),
+            hintStyle: context.typography.bodyMedium?.copyWith(color: kGray),
             border: OutlineInputBorder(
               borderSide: BorderSide.none,
               borderRadius: BorderRadius.circular(8),
@@ -107,7 +107,7 @@ class _TextQuestionPageState extends State<TextQuestionPage> {
             }
 
             return const ErrorContainer(
-              message: "Bitte geben Sie mindestens 16 Zeichen ein.",
+              message: "Bitte gib mindestens 16 Zeichen ein.",
             );
           },
         ),

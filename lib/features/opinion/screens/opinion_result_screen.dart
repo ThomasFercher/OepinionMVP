@@ -1,11 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
-import 'package:oepinion/common/auth/auth_service.dart';
-import 'package:oepinion/common/colors.dart';
 import 'package:oepinion/common/extensions.dart';
 import 'package:oepinion/common/widgets/footer.dart';
 import 'package:oepinion/common/widgets/screen_scaffold.dart';
@@ -15,8 +10,6 @@ import 'package:oepinion/features/opinion/widgets/partner_footer.dart';
 import 'package:oepinion/main.dart';
 import 'package:oepinion/routes/routes.dart';
 import 'dart:html';
-
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class IdRepository {
   final Storage _localStorage = window.localStorage;
@@ -58,10 +51,12 @@ class HasParticipatedNotifier extends ChangeNotifier {
 
 class OpinionResultScreen extends StatelessWidget {
   final String? referalCode;
+  final bool interview;
 
   const OpinionResultScreen({
     Key? key,
     required this.referalCode,
+    required this.interview,
   }) : super(key: key);
 
   @override
@@ -107,16 +102,18 @@ class OpinionResultScreen extends StatelessWidget {
           if (hasParticipated._hasParticipated) ...[
             32.vSpacing,
             BetterButton(
-              text: "Referal",
+              text: "Zum ReferalCode",
               onPressed: () {
                 appRouter.go("/referal");
               },
-              color: kBlue,
+              color: context.colors.primary,
+              width: 240,
             )
           ] else ...[
             Image.asset("$illustrationPath/i5.png"),
             RaffleContainer(
               referalCode: referalCode,
+              interview: interview,
             ),
           ],
         ],
@@ -127,7 +124,9 @@ class OpinionResultScreen extends StatelessWidget {
 
 class RaffleContainer extends StatefulWidget {
   final String? referalCode;
-  const RaffleContainer({Key? key, required this.referalCode})
+  final bool interview;
+  const RaffleContainer(
+      {Key? key, required this.referalCode, required this.interview})
       : super(key: key);
 
   @override
@@ -165,6 +164,12 @@ class _RaffleContainerState extends State<RaffleContainer> {
         emailRedirectTo:
             "https://oepinion.at/verifiy${widget.referalCode != null ? "?referal=${widget.referalCode}" : ""}&email=${Uri.encodeComponent(email)}",
       );
+
+      if (widget.interview) {
+        await supabase.from("interviews").insert({
+          "email": email,
+        });
+      }
 
       hasParticipated.setHasParticipated(true);
       appRouter.go("/referal");
