@@ -27,6 +27,9 @@ final testSurvey = Survey.withId(
   title: "Öpinion Market Research",
   description: "Öpinion Market Research",
   questions: [
+    const CaptchaQuestion(
+      id: "A",
+    ),
     YesNoQuestion(
       question:
           "Bist du aktuell als Student/in an einer österreichischen Hochschule eingeschrieben?",

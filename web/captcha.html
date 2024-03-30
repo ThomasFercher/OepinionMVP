@@ -1,0 +1,28 @@
+<html>
+
+<head>
+    <title>hCaptcha</title>
+    <script src="https://hcaptcha.com/1/api.js" async defer></script>
+</head>
+
+<body'>
+    <div></div>
+    <form action="?" method="POST">
+        <div class="h-captcha"
+            style='position: absolute; top: 25%; left: 50%; transform: translate(-50%, -50%);'
+            data-sitekey="439af00f-ea09-4736-9828-3e15cbd5cc42" data-callback="captchaCallback"></div>
+
+    </form>
+    <script>
+        function captchaCallback(response) {
+            if (typeof Captcha !== "undefined") {
+                Captcha.postMessage(response);
+            }
+            // Post Mesage to Flutter through window.addEventListener('message', function (event) { ... });
+            window.parent.postMessage(response, "*");
+
+        }
+    </script>
+</body>
+
+</html>

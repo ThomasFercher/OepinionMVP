@@ -201,11 +201,6 @@ class _SurveyScreenState extends State<SurveyScreen> {
       );
     }
 
-    // TODO: Implement captcha
-    if (!captchaSolved && false) {
-      return const CaptchaScreen();
-    }
-
     if (showResult) {
       return const FinishedScreen();
     }
@@ -243,6 +238,9 @@ class _SurveyScreenState extends State<SurveyScreen> {
                           RadioQuestionPage(question: question),
                         DropDownQuestion question =>
                           DropdownQuestionPage(question: question),
+                        CaptchaQuestion question => CaptchaScreen(
+                            question: question,
+                          ),
                         PlaceHolderQuestion _ => throw UnimplementedError(),
                       };
 
@@ -306,7 +304,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                     ValueListenableBuilder(
                       valueListenable: currentPage,
                       builder: (context, index, child) {
-                        if (index == 0) {
+                        if (index < 2) {
                           return const SizedBox.shrink();
                         }
                         return child!;

@@ -161,8 +161,11 @@ class _RaffleContainerState extends State<RaffleContainer> {
       await supabase.auth.signInWithOtp(
         email: email,
         shouldCreateUser: true,
-        emailRedirectTo:
-            "https://oepinion.at/verifiy${widget.referalCode != null ? "?referal=${widget.referalCode}" : ""}&email=${Uri.encodeComponent(email)}",
+        data: {
+          "referal": widget.referalCode,
+        },
+        //   emailRedirectTo:
+        //       "https://oepinion.at/verifiy${widget.referalCode != null ? "?referal=${widget.referalCode}" : ""}&email=${Uri.encodeComponent(email)}",
       );
 
       if (widget.interview) {

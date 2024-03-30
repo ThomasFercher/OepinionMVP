@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 typedef Json = Map<String, dynamic>;
@@ -356,5 +357,28 @@ final class PlaceHolderQuestion extends Question {
   @override
   factory PlaceHolderQuestion.fromJson(Json json) {
     return PlaceHolderQuestion(json['id'] as String, json['end'] as bool);
+  }
+}
+
+final class CaptchaQuestion extends Question {
+  const CaptchaQuestion({
+    required super.id,
+  }) : super(question: 'Bist du ein Roboter?', end: false, destination: null);
+
+  @override
+  Json toJson() {
+    return {
+      'type': 'captcha',
+    };
+  }
+
+  @override
+  bool get handlesNav => true;
+
+  @override
+  factory CaptchaQuestion.fromJson(Json json) {
+    return CaptchaQuestion(
+      id: json['id'] as String,
+    );
   }
 }

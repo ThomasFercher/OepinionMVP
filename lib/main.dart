@@ -21,34 +21,11 @@ const iconPath = 'images/icons';
 void main() async {
   setUrlStrategy(PathUrlStrategy());
 
-//   ui.platformViewRegistry.registerViewFactory(
-//       'captchaView',
-//       (int viewId) => IFrameElement()
-//         ..width = '640'
-//         ..height = '360'
-//         ..srcdoc = '''
-//           <html>
-// <html>
-//   <head>
-//     <title>reCAPTCHA demo: Simple page</title>
-//     <script src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
-//   </head>
-//   <body>
-//     <form action="" method="POST">
-//       <div class="g-recaptcha" data-sitekey="6LfjBJgpAAAAAM-_tEXP63AfvD1qnwazKyEioqyT" data-action="LOGIN"></div>
-//       <br/>
-//       <input type="submit" value="Submit">
-//     </form>
-//   </body>
-// </html>
-//         '''
-//         ..style.border = 'none');
-
   await Supabase.initialize(
     url: 'https://dgrjnxiesxkgbyujipzy.supabase.co',
     anonKey: supabaseKey,
     authOptions: const FlutterAuthClientOptions(
-      authFlowType: AuthFlowType.implicit,
+      authFlowType: AuthFlowType.pkce,
     ),
   );
 

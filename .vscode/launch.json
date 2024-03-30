@@ -11,6 +11,8 @@
             "args": [
                 "--dart-define-from-file=env.json",
                 "--web-port=8080",
+              //  "--web-browser-flag",
+           //     "--disable-web-security"
             ]
 
         },

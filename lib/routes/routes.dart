@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oepinion/features/about/about_screen.dart';
 import 'package:oepinion/features/data_policy/data_policy_screen.dart';
@@ -108,9 +109,9 @@ final GoRouter appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: "/verifiy",
+      path: "/verify",
       redirect: (context, state) async {
-        final code = state.uri.queryParameters['code'];
+        final code = state.uri.queryParameters['token'];
         final email = state.uri.queryParameters['email'];
 
         if (email == null || code == null) {
