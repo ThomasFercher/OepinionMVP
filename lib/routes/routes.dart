@@ -51,13 +51,27 @@ final GoRouter appRouter = GoRouter(
         return "/opinion/$initalSurvey";
       },
     ),
-    GoRoute(path: "/about", builder: (context, state) => const AboutScreen()),
     GoRoute(
-        path: "/data-policy",
-        builder: (context, state) => const DataPolicyScreen()),
+      path: "/about",
+      pageBuilder: (context, state) => NoTransitionPage<void>(
+        key: state.pageKey,
+        child: const AboutScreen(),
+      ),
+    ),
     GoRoute(
-        path: "/raffle",
-        builder: (context, state) => const RafflePolicyScreen()),
+      path: "/data-policy",
+      pageBuilder: (context, state) => NoTransitionPage<void>(
+        key: state.pageKey,
+        child: const DataPolicyScreen(),
+      ),
+    ),
+    GoRoute(
+      path: "/raffle",
+      pageBuilder: (context, state) => NoTransitionPage<void>(
+        key: state.pageKey,
+        child: const RafflePolicyScreen(),
+      ),
+    ),
 
     GoRoute(
       path: '/opinion/:id',
@@ -140,10 +154,14 @@ final GoRouter appRouter = GoRouter(
         final referal = state.uri.queryParameters['referal'];
 
         if (referal != null && referal != "null") {
-          await supabase.rpc(
-            "update_referals",
-            params: {"id": referal},
-          );
+          try {
+            await supabase.rpc(
+              "update_referals",
+              params: {"id": referal},
+            );
+          } catch (e) {
+            return "/";
+          }
         }
 
         return "/referal";

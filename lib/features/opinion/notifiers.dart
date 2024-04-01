@@ -43,16 +43,16 @@ final testSurvey = Survey.withId(
       id: "b",
       question: "In welchem Studienabschnitt befindest du dich?",
       choices: [
-        "Bachelor",
-        "Master",
-        "Doktor",
+        ("Bachelor", null),
+        ("Master", null),
+        ("Doktor", null),
       ],
       allowMultiple: false,
     ),
     YesNoQuestion(
       id: "c",
       question:
-          "Hast du bereits eigene Fragebogenstudien für Studienzwecke erstellt?",
+          "Hast du schon einmal selbst einen Fragebogen für Forschungs- oder Studienzwecke erstellt?",
       skipToQuestion: (answer) => switch (answer) {
         false => "a2",
         _ => null,
@@ -101,13 +101,34 @@ final testSurvey = Survey.withId(
       question:
           "Wo würdest du dir durch ein KI-gestütztes Tool bei deiner Abschlussarbeit Unterstützung wünschen?",
       choices: [
-        "Themenausarbeitung",
-        "Hypothesenbildung",
-        "Forschungsstrategie",
-        "Fragebogenerstellung",
-        "Datenerhebung",
-        "Datenanalyse und Auswertung",
-        "Schreibprozess",
+        (
+          "Themenausarbeitung",
+          "z.B.: Themenfindung und Zielsetzung",
+        ),
+        (
+          "Hypothesenbildung",
+          "z.B.: Entwicklung von Annahmen aus Literatur",
+        ),
+        (
+          "Forschungsstrategie",
+          "z.B.: Festlegung der Untersuchungsmethoden",
+        ),
+        (
+          "Fragebogenerstellung",
+          "z.B.: Formulierung der Fragen laut Hypothese"
+        ),
+        (
+          "Datenerhebung",
+          "z.B.: Durchführung der Umfragen",
+        ),
+        (
+          "Datenanalyse und Auswertung",
+          "z.B.: Statische Auswertunge",
+        ),
+        (
+          "Schreibprozess",
+          "z.B.: Erstellung des Forschungsbericht",
+        )
       ],
       allowMultiple: true,
     ),
@@ -132,7 +153,7 @@ final testSurvey = Survey.withId(
     const YesNoQuestion(
       id: "k",
       question:
-          "Würdest du an einem persönlichen Gespräch teilnehmen, um deine Erfahrungen und Sichtweisen noch tiefer zu teilen und zu erläutern? ☕️",
+          "Würdest du an einem persönlichen Gespräch teilnehmen, um dein Feedback und deine Perspektiven ausführlicher zu teilen? ☕️",
     ),
     const DropDownQuestion(
       id: "l",
@@ -151,6 +172,20 @@ final testSurvey = Survey.withId(
         "Sozial- und Wirtschaftswissenschaften (z.B. Betriebswirtschaft, Volkswirtschaftslehre)",
         "Theologische Studien",
         "Umwelt- und Agrarwissenschaften (z.B. Agrartechnologie)",
+        "Bauen & Energie",
+        "Bildung, Lehramt & Pädagogik",
+        "Engineering, Technik & IT",
+        "Events & Sport",
+        "Gesundheit & Soziales",
+        "Kunst & Musik",
+        "Medien & Design",
+        "Naturwissenschaften",
+        "Philosophie",
+        "Politik & Recht",
+        "Psychologie",
+        "Religion",
+        "Sprachen, Kultur & Geschichte",
+        "Tourismus",
       ],
       end: true,
     ),
@@ -176,13 +211,34 @@ final testSurvey = Survey.withId(
       question:
           "Mal angenommen, du müsstet nun deine Abschlussarbeit schreiben, in welchen Bereichen siehst du die größten Herausforderungen?",
       choices: [
-        "Themenausarbeitung",
-        "Hypothesenbildung",
-        "Forschungsstrategie",
-        "Fragebogenerstellung",
-        "Datenerhebung",
-        "Datenanalyse und Auswertung",
-        "Schreibprozess",
+        (
+          "Themenausarbeitung",
+          "z.B.: Themenfindung und Zielsetzung",
+        ),
+        (
+          "Hypothesenbildung",
+          "z.B.: Entwicklung von Annahmen aus Literatur",
+        ),
+        (
+          "Forschungsstrategie",
+          "z.B.: Festlegung der Untersuchungsmethoden",
+        ),
+        (
+          "Fragebogenerstellung",
+          "z.B.: Formulierung der Fragen laut Hypothese"
+        ),
+        (
+          "Datenerhebung",
+          "z.B.: Durchführung der Umfragen",
+        ),
+        (
+          "Datenanalyse und Auswertung",
+          "z.B.: Statische Auswertung",
+        ),
+        (
+          "Schreibprozess",
+          "z.B.: Erstellung des Forschungsbericht",
+        )
       ],
       allowMultiple: true,
       end: true,
@@ -196,10 +252,10 @@ final testSurvey = Survey.withId(
       question:
           "In welchen der folgenden Bereiche hättest du dir mehr Unterstützung bei der Planung und Durchführung von Fragebogenstudien gewünscht?",
       choices: [
-        "Fragebogendesign und -entwicklung",
-        "Teilnehmerakquise",
-        "Datenerhebung und -management",
-        "Datenanalyse und Interpretation",
+        ("Fragebogendesign und -entwicklung", null),
+        ("Teilnehmerakquise", null),
+        ("Datenerhebung und -management", null),
+        ("Datenanalyse und Interpretation", null),
       ],
       allowMultiple: true,
     ),

@@ -13,7 +13,7 @@ import 'package:oepinion/features/opinion/questions/range_question_page.dart';
 import 'package:oepinion/features/opinion/questions/text_question_page.dart';
 import 'package:oepinion/features/opinion/questions/yes_no_question_page.dart';
 import 'package:oepinion/features/opinion/screens/captcha_screen.dart';
-import 'package:oepinion/features/opinion/screens/finished_screen.dart';
+import 'package:oepinion/features/opinion/screens/opinion_result_screen.dart';
 import 'package:oepinion/features/opinion/screens/welcome_screen.dart';
 import 'package:oepinion/features/opinion/validation.dart';
 import 'package:oepinion/main.dart';
@@ -84,6 +84,10 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
   Survey get survey => widget.survey;
 
+  String? referalCode;
+
+  bool? interview;
+
   Set<String> questionHistory = {};
 
   @override
@@ -109,10 +113,10 @@ class _SurveyScreenState extends State<SurveyScreen> {
     final answers = validator.answers.entries.toList();
 
     final interviewAnswer = answers.singleWhereOrNull((e) => e.key.id == "k");
-    final bool interview = interviewAnswer?.value is TextAnswer &&
+    interview = interviewAnswer?.value is TextAnswer &&
         (interviewAnswer?.value as TextAnswer).answer.toLowerCase() == 'ja';
 
-    final referalCode = getReferalCode(context);
+    referalCode = getReferalCode(context);
 
     Future<void> answer() async {
       try {
@@ -124,11 +128,6 @@ class _SurveyScreenState extends State<SurveyScreen> {
         setState(() {
           showResult = true;
         });
-
-        await Future.delayed(const Duration(seconds: 3));
-        GoRouter.of(context).go(
-          "/opinion/${survey.id}/result?referal=$referalCode${interview == true ? '&interview=true' : ''}",
-        );
       } catch (e, s) {
         print(e);
         print(s);
@@ -202,7 +201,10 @@ class _SurveyScreenState extends State<SurveyScreen> {
     }
 
     if (showResult) {
-      return const FinishedScreen();
+      return OpinionResultScreen(
+        referalCode: referalCode,
+        interview: interview ?? false,
+      );
     }
 
     return SurveyInfo(
@@ -212,12 +214,11 @@ class _SurveyScreenState extends State<SurveyScreen> {
         body: Center(
           child: Container(
             constraints: const BoxConstraints(maxWidth: 960),
-            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: [
-                24.vSpacing,
+                context.dyn(16, 16, 24).vSpacing,
                 Expanded(
                   child: ValueListenableBuilder(
                     valueListenable: currentPage,
@@ -250,7 +251,9 @@ class _SurveyScreenState extends State<SurveyScreen> {
                           TextQuestion _ || MultipleChoiceQuestion _ => true,
                           _ => false,
                         },
-                        padding: EdgeInsets.zero,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.dyn(16, 24, 32),
+                        ),
                         child: page,
                       );
 
@@ -258,7 +261,9 @@ class _SurveyScreenState extends State<SurveyScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: context.dyn(16, 24, 32),
+                            ),
                             child: Text(
                               "${survey.getPercentage(questionHistory)}%",
                               style: context.typography.bodySmall?.copyWith(
@@ -267,14 +272,19 @@ class _SurveyScreenState extends State<SurveyScreen> {
                             ),
                           ),
                           4.vSpacing,
-                          LinearProgressIndicator(
-                            value: survey.getProgress(questionHistory),
-                            borderRadius: BorderRadius.circular(8),
-                            minHeight: 12,
-                            color: kBlue,
-                            backgroundColor: kGray.withOpacity(0.1),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: context.dyn(16, 24, 32),
+                            ),
+                            child: LinearProgressIndicator(
+                              value: survey.getProgress(questionHistory),
+                              borderRadius: BorderRadius.circular(8),
+                              minHeight: 12,
+                              color: kBlue,
+                              backgroundColor: kGray.withOpacity(0.1),
+                            ),
                           ),
-                          32.vSpacing,
+                          context.dyn(16, 24, 32).vSpacing,
                           Expanded(
                             child: AnimatedSwitcher(
                               duration: const Duration(milliseconds: 200),
@@ -298,66 +308,84 @@ class _SurveyScreenState extends State<SurveyScreen> {
                   ),
                 ),
                 4.vSpacing,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ValueListenableBuilder(
-                      valueListenable: currentPage,
-                      builder: (context, index, child) {
-                        if (index < 2) {
-                          return const SizedBox.shrink();
-                        }
-                        return child!;
-                      },
-                      child: TextButton(
-                        onPressed: () {
-                          questionHistory.remove(questionHistory.last);
-                          currentPage.value = currentPage.value - 1;
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.dyn(16, 24, 32),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ValueListenableBuilder(
+                        valueListenable: currentPage,
+                        builder: (context, index, child) {
+                          if (index < 2) {
+                            return const SizedBox.shrink();
+                          }
+                          return child!;
                         },
-                        style: TextButton.styleFrom(primary: kBlue),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Text(
-                            "Zurück",
-                            style: context.typography.bodyLarge?.copyWith(
-                              color: kBlue,
+                        child: TextButton(
+                          onPressed: () {
+                            questionHistory.remove(questionHistory.last);
+                            currentPage.value = currentPage.value - 1;
+                          },
+                          style: TextButton.styleFrom(primary: kBlue),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Text(
+                              "Zurück",
+                              style: context.typography.bodyLarge?.copyWith(
+                                color: kBlue,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    ValueListenableBuilder(
-                      valueListenable: currentPage,
-                      builder: (context, index, child) {
-                        if (currentQuestion.handlesNav) {
-                          return const SizedBox.shrink();
-                        }
-                        return child!;
-                      },
-                      child: TextButton(
-                        onPressed: () {
-                          validationNotifier.validate(currentQuestion);
+                      ValueListenableBuilder(
+                        valueListenable: currentPage,
+                        builder: (context, index, child) {
+                          if (currentQuestion.handlesNav) {
+                            return const SizedBox.shrink();
+                          }
+                          return child!;
                         },
-                        style: TextButton.styleFrom(primary: kBlue),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Text(
-                            "Weiter",
-                            style: context.typography.bodyLarge?.copyWith(
-                              color: kBlue,
+                        child: TextButton(
+                          onPressed: () {
+                            validationNotifier.validate(currentQuestion);
+                          },
+                          style: TextButton.styleFrom(primary: kBlue),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Text(
+                              "Weiter",
+                              style: context.typography.bodyLarge?.copyWith(
+                                color: kBlue,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                24.vSpacing,
+                context.dyn(8, 16, 24).vSpacing,
               ],
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+extension Dyn on BuildContext {
+  T dyn<T>(T small, T medium, T large) {
+    final width = MediaQuery.of(this).size.width;
+    if (width < 600) {
+      return small;
+    } else if (width < 960) {
+      return medium;
+    } else {
+      return large;
+    }
   }
 }

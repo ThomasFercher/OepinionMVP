@@ -71,7 +71,7 @@ class _TextQuestionPageState extends State<TextQuestionPage> {
           widget.question.question,
           style: context.typography.headlineSmall,
         ),
-        48.vSpacing,
+        32.vSpacing,
         TextField(
           // scrollPhysics: const NeverScrollableScrollPhysics(),
           maxLength: 512,
@@ -90,7 +90,7 @@ class _TextQuestionPageState extends State<TextQuestionPage> {
               vertical: 22,
             ),
             fillColor: kGray3,
-            hintText: "Was denkst du dazu?",
+            hintText: "Was denkst du dazu? (min. 16 Zeichen)",
             hintStyle: context.typography.bodyMedium?.copyWith(color: kGray),
             border: OutlineInputBorder(
               borderSide: BorderSide.none,

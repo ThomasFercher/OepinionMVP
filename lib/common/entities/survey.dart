@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
@@ -168,7 +170,7 @@ final class YesNoQuestion extends Question {
 }
 
 final class MultipleChoiceQuestion extends Question {
-  final List<String> choices;
+  final List<(String, String?)> choices;
   final bool allowMultiple;
 
   const MultipleChoiceQuestion({
@@ -188,7 +190,12 @@ final class MultipleChoiceQuestion extends Question {
     return {
       'type': 'multiplechoice',
       'question': question,
-      'choices': choices,
+      'choices': choices
+          .map((e) => jsonEncode({
+                'choice': e.$1,
+                'description': e.$2,
+              }))
+          .toList(),
       'allowMultiple': allowMultiple,
     };
   }
@@ -197,7 +204,10 @@ final class MultipleChoiceQuestion extends Question {
   factory MultipleChoiceQuestion.fromJson(Json json) {
     return MultipleChoiceQuestion(
       question: json['question'] as String,
-      choices: (json['choices'] as List).cast<String>(),
+      choices: (json['choices'] as List)
+          .map((e) => jsonDecode(e as String))
+          .map((e) => (e['choice'] as String, e['description'] as String?))
+          .toList(),
       allowMultiple: json['allowMultiple'] as bool,
       id: json['id'] as String,
     );

@@ -4,11 +4,13 @@ import 'package:oepinion/common/extensions.dart';
 
 class CheckBoxTile extends StatelessWidget {
   final String title;
+  final String? subTitle;
   final ValueNotifier<bool?> valueNotifier;
 
   const CheckBoxTile({
     super.key,
     required this.title,
+    this.subTitle,
     required this.valueNotifier,
   });
 
@@ -46,11 +48,30 @@ class CheckBoxTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
-                        child: Text(
-                          title,
-                          style: context.typography.bodyMedium?.copyWith(
-                            color: isSelected ? Colors.white : kGray,
-                          ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              title,
+                              style: context.typography.bodyMedium?.copyWith(
+                                color: isSelected
+                                    ? Colors.white
+                                    : subTitle == null
+                                        ? kGray
+                                        : Colors.black,
+                              ),
+                            ),
+                            if (subTitle != null) ...[
+                              4.vSpacing,
+                              Text(
+                                "($subTitle)",
+                                style: context.typography.bodySmall?.copyWith(
+                                  color: isSelected ? Colors.white : kGray,
+                                ),
+                              ),
+                            ],
+                          ],
                         ),
                       ),
                       Checkbox(

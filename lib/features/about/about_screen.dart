@@ -5,6 +5,7 @@ import 'package:oepinion/common/extensions.dart';
 import 'package:oepinion/common/widgets/footer.dart';
 import 'package:oepinion/common/widgets/screen_scaffold.dart';
 import 'package:oepinion/features/opinion/screens/welcome_screen.dart';
+import 'package:oepinion/features/opinion/widgets/partner_footer.dart';
 import 'package:oepinion/main.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -82,10 +83,8 @@ class AboutScreen extends StatelessWidget {
             width: 400,
           ),
           32.vSpacing,
-          Text(
-            "In Kooperation mit der FH Kärnten und geleitet von Herrn Mag. Dr. Fenzl, gewährleisten wir, dass unsere Marktforschung den höchsten akademischen Standards entspricht und dir praktischen Nutzen bietet.",
-            textAlign: TextAlign.center,
-            style: context.typography.bodyMedium,
+          const PartnerFooter(
+            showImages: false,
           ),
           64.vSpacing,
           const SupportLink(),

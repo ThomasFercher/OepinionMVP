@@ -26,12 +26,12 @@ class _MultipleChoiceQuestionPageState
   late SurveyValidator validator;
   late SurveyValidationNotifier validationNotifier;
 
-  late Map<String, ValueNotifier<bool?>> valueNotifiers;
+  late Map<(String, String?), ValueNotifier<bool?>> valueNotifiers;
   late ValueNotifier<bool?> validNotifier;
 
   Map<String, bool> get values => {
         for (final entry in valueNotifiers.entries)
-          entry.key: entry.value.value ?? false,
+          entry.key.$1: entry.value.value ?? false,
       };
 
   List<String> get choices {
@@ -51,7 +51,7 @@ class _MultipleChoiceQuestionPageState
       for (final option in widget.question.choices)
         option: ValueNotifier(false)
           ..addListener(
-            () => answerChanged(option),
+            () => answerChanged(option.$1),
           ),
     };
     super.didChangeDependencies();
@@ -112,12 +112,12 @@ class _MultipleChoiceQuestionPageState
         16.vSpacing,
         if (widget.question.allowMultiple)
           Text(
-            "Wählen Sie eine oder mehrere Antworten",
+            "Wähle eine oder mehrere Antworten",
             style: context.typography.bodySmall,
           )
         else
           Text(
-            "Wählen Sie eine Antwort",
+            "Wähle eine Antwort",
             style: context.typography.bodySmall,
           ),
         32.vSpacing,
@@ -127,7 +127,8 @@ class _MultipleChoiceQuestionPageState
               Padding(
                 padding: const EdgeInsets.only(bottom: 12.0),
                 child: CheckBoxTile(
-                  title: option,
+                  title: option.$1,
+                  subTitle: option.$2,
                   valueNotifier: valueNotifiers[option]!,
                 ),
               )

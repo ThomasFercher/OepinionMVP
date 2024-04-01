@@ -57,7 +57,6 @@ class _IFramePageState extends State<IFramePage> {
 }
 
 Future<bool> verifyCaptcha(String captcha) async {
-  print("Calling captcha function");
   try {
     final result = await supabase.functions.invoke(
       'captcha',

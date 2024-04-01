@@ -90,6 +90,7 @@ class BetterButton extends StatelessWidget {
               style: context.typography.bodyLarge?.copyWith(
                 color: foregroundColor,
               ),
+              textAlign: TextAlign.center,
             ),
           ),
         ),
