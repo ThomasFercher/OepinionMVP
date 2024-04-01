@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -30,7 +31,7 @@ void main() async {
   );
 
   runApp(
-    const App(),
+    const ProviderScope(child: App()),
   );
 }
 

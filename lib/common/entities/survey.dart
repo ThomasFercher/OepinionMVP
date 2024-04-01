@@ -133,6 +133,21 @@ sealed class Question {
       _ => throw Exception('Unknown question type'),
     };
   }
+
+  @override
+  int get hashCode =>
+      id.hashCode ^ question.hashCode ^ destination.hashCode ^ end.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Question &&
+        other.id == id &&
+        other.question == question &&
+        other.destination == destination &&
+        other.end == end;
+  }
 }
 
 final class YesNoQuestion extends Question {

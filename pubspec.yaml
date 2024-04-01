@@ -39,6 +39,7 @@ dependencies:
   uuid: ^4.3.3
   mailto: ^2.0.0
   flutter_svg: ^2.0.10+1
+  flutter_riverpod: ^2.5.1
 
 
   

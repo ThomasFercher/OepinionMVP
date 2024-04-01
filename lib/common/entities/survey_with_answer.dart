@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:oepinion/common/entities/survey.dart';
 
 sealed class Answer {
@@ -32,7 +34,7 @@ final class TextAnswer extends Answer {
 }
 
 final class MultipleChoiceAnswer extends Answer {
-  final List<String> choices;
+  final List<(String, String?)> choices;
 
   const MultipleChoiceAnswer({
     required this.choices,
@@ -41,7 +43,12 @@ final class MultipleChoiceAnswer extends Answer {
   @override
   Json toJson(Question question) {
     return {
-      'choices': choices,
+      'choices': choices
+          .map((e) => jsonEncode({
+                'choice': e.$1,
+                'description': e.$2,
+              }))
+          .toList(),
       'id': question.id,
     };
   }
@@ -49,7 +56,10 @@ final class MultipleChoiceAnswer extends Answer {
   @override
   Answer fromJson(Json json) {
     return MultipleChoiceAnswer(
-      choices: json['choices'] as List<String>,
+      choices: (json['choices'] as List)
+          .map((e) => jsonDecode(e) as Map<String, dynamic>)
+          .map((e) => (e['choice'] as String, e['description'] as String?))
+          .toList(),
     );
   }
 }

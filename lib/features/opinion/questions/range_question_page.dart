@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:oepinion/common/colors.dart';
 
 import 'package:oepinion/common/entities/survey.dart';
@@ -7,7 +8,21 @@ import 'package:oepinion/common/entities/survey_with_answer.dart';
 import 'package:oepinion/common/extensions.dart';
 import 'package:oepinion/features/opinion/validation.dart';
 
-class RangeQuestionPage extends StatefulWidget {
+class RangeAnswerNotifier extends FamilyNotifier<int, RangeQuestion> {
+  @override
+  int build(arg) => arg.middle;
+
+  void setAnswer(int answer) {
+    state = answer;
+  }
+}
+
+final rangeAnswerNotifier =
+    NotifierProvider.family<RangeAnswerNotifier, int, RangeQuestion>(
+  RangeAnswerNotifier.new,
+);
+
+class RangeQuestionPage extends ConsumerStatefulWidget {
   final RangeQuestion question;
 
   const RangeQuestionPage({
@@ -16,23 +31,20 @@ class RangeQuestionPage extends StatefulWidget {
   });
 
   @override
-  State<RangeQuestionPage> createState() => _RangeQuestionPageState();
+  ConsumerState<RangeQuestionPage> createState() => _RangeQuestionPageState();
 }
 
-class _RangeQuestionPageState extends State<RangeQuestionPage> {
-  late final ValueNotifier<double> valueNotifier;
+class _RangeQuestionPageState extends ConsumerState<RangeQuestionPage> {
   late SurveyValidationNotifier validatorNotifier;
   late SurveyValidator validator;
 
   @override
   void initState() {
-    valueNotifier = ValueNotifier(widget.question.middle.toDouble());
     super.initState();
   }
 
   @override
   void dispose() {
-    valueNotifier.dispose();
     validatorNotifier.removeListener(validate);
     super.dispose();
   }
@@ -42,16 +54,17 @@ class _RangeQuestionPageState extends State<RangeQuestionPage> {
     validatorNotifier = SurveyInfo.of(context).validationNotifier
       ..addListener(validate);
     validator = SurveyInfo.of(context).validator;
+
     super.didChangeDependencies();
   }
 
   void validate() {
     if (validatorNotifier.current != widget.question) return;
+
+    final answer = ref.read(rangeAnswerNotifier(widget.question));
     validator.answer(
       widget.question,
-      RangeAnswer(
-        answer: valueNotifier.value.toInt(),
-      ),
+      RangeAnswer(answer: answer),
     );
     validator.validateField(widget.question, true);
   }
@@ -83,9 +96,9 @@ class _RangeQuestionPageState extends State<RangeQuestionPage> {
           ),
         ),
         16.vSpacing,
-        ValueListenableBuilder(
-          valueListenable: valueNotifier,
-          builder: (context, val, snapshot) {
+        Consumer(
+          builder: (context, ref, child) {
+            final value = ref.watch(rangeAnswerNotifier(widget.question));
             return SliderTheme(
               data: SliderThemeData(
                 trackHeight: 4,
@@ -98,12 +111,16 @@ class _RangeQuestionPageState extends State<RangeQuestionPage> {
               ),
               child: Slider(
                 thumbColor: kGreen,
-                value: val,
+                value: value.toDouble(),
                 divisions: widget.question.max - widget.question.min,
                 min: widget.question.min.toDouble(),
                 max: widget.question.max.toDouble(),
                 onChanged: (value) {
-                  valueNotifier.value = value;
+                  ref
+                      .read(rangeAnswerNotifier(widget.question).notifier)
+                      .setAnswer(
+                        value.toInt(),
+                      );
                 },
               ),
             );

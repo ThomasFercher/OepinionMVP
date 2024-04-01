@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oepinion/common/colors.dart';
 import 'package:oepinion/common/entities/survey.dart';
@@ -59,7 +62,7 @@ class _OpinionScreenState extends State<OpinionScreen> {
   }
 }
 
-class SurveyScreen extends StatefulWidget {
+class SurveyScreen extends ConsumerStatefulWidget {
   final Survey survey;
 
   const SurveyScreen({
@@ -68,10 +71,10 @@ class SurveyScreen extends StatefulWidget {
   });
 
   @override
-  State<SurveyScreen> createState() => _SurveyScreenState();
+  ConsumerState<SurveyScreen> createState() => _SurveyScreenState();
 }
 
-class _SurveyScreenState extends State<SurveyScreen> {
+class _SurveyScreenState extends ConsumerState<SurveyScreen> {
   late final ValueNotifier<int> currentPage;
 
   final SurveyValidator validator = SurveyValidator();
@@ -106,6 +109,10 @@ class _SurveyScreenState extends State<SurveyScreen> {
     validator
       ..removeListener(fieldChanged)
       ..dispose();
+    ref
+      ..invalidate(textAnswerNotifier)
+      ..invalidate(mcAnswerNotifier)
+      ..invalidate(rangeAnswerNotifier);
     super.dispose();
   }
 
@@ -119,6 +126,10 @@ class _SurveyScreenState extends State<SurveyScreen> {
     referalCode = getReferalCode(context);
 
     Future<void> answer() async {
+      ref
+        ..invalidate(textAnswerNotifier)
+        ..invalidate(mcAnswerNotifier)
+        ..invalidate(rangeAnswerNotifier);
       try {
         await supabase.from('survey_answers').insert({
           'answers': answers.map((e) => e.value.toJson(e.key)).toList(),
@@ -228,7 +239,11 @@ class _SurveyScreenState extends State<SurveyScreen> {
                       }
                       final page = switch (currentQuestion) {
                         MultipleChoiceQuestion question =>
-                          MultipleChoiceQuestionPage(question: question),
+                          MultipleChoiceQuestionPage(
+                            question: question,
+                            validationNotifier: validationNotifier,
+                            validator: validator,
+                          ),
                         YesNoQuestion question =>
                           YesNoQuestionPage(question: question),
                         RangeQuestion question =>
@@ -325,8 +340,12 @@ class _SurveyScreenState extends State<SurveyScreen> {
                         },
                         child: TextButton(
                           onPressed: () {
+                            final index = survey.questions.indexWhere(
+                              (element) => element.id == questionHistory.last,
+                            );
                             questionHistory.remove(questionHistory.last);
-                            currentPage.value = currentPage.value - 1;
+
+                            currentPage.value = index;
                           },
                           style: TextButton.styleFrom(primary: kBlue),
                           child: Padding(

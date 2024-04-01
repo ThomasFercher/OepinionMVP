@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:oepinion/common/colors.dart';
 import 'package:oepinion/common/entities/survey.dart';
 import 'package:oepinion/common/entities/survey_with_answer.dart';
@@ -7,7 +8,21 @@ import 'package:oepinion/common/extensions.dart';
 import 'package:oepinion/features/opinion/validation.dart';
 import 'package:oepinion/features/opinion/widgets/error_container.dart';
 
-class TextQuestionPage extends StatefulWidget {
+class TextAnswerNotifier extends FamilyNotifier<String?, TextQuestion> {
+  @override
+  String? build(arg) => null;
+
+  void setAnswer(String answer) {
+    state = answer;
+  }
+}
+
+final textAnswerNotifier =
+    NotifierProvider.family<TextAnswerNotifier, String?, TextQuestion>(
+  TextAnswerNotifier.new,
+);
+
+class TextQuestionPage extends ConsumerStatefulWidget {
   final TextQuestion question;
 
   const TextQuestionPage({
@@ -16,10 +31,10 @@ class TextQuestionPage extends StatefulWidget {
   });
 
   @override
-  State<TextQuestionPage> createState() => _TextQuestionPageState();
+  ConsumerState<TextQuestionPage> createState() => _TextQuestionPageState();
 }
 
-class _TextQuestionPageState extends State<TextQuestionPage> {
+class _TextQuestionPageState extends ConsumerState<TextQuestionPage> {
   late SurveyValidator validator;
   late SurveyValidationNotifier validationNotifier;
   late TextEditingController controller;
@@ -43,6 +58,8 @@ class _TextQuestionPageState extends State<TextQuestionPage> {
     validationNotifier = SurveyInfo.of(context).validationNotifier
       ..addListener(validate);
     validator = SurveyInfo.of(context).validator;
+
+    controller.text = ref.read(textAnswerNotifier(widget.question)) ?? '';
     super.didChangeDependencies();
   }
 
@@ -79,7 +96,11 @@ class _TextQuestionPageState extends State<TextQuestionPage> {
           style: context.typography.bodyMedium?.copyWith(
             color: kText,
           ),
-
+          onChanged: (value) {
+            ref
+                .read(textAnswerNotifier(widget.question).notifier)
+                .setAnswer(value);
+          },
           controller: controller,
           inputFormatters: [
             MaxLinesTextInputFormatter(maxLines: 8),
