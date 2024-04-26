@@ -135,18 +135,13 @@ final GoRouter appRouter = GoRouter(
         final decodedEmail = Uri.decodeComponent(email);
 
         if (supabase.auth.currentUser == null) {
-          final AuthResponse result;
           try {
-            result = await supabase.auth.verifyOTP(
+            await supabase.auth.verifyOTP(
               token: code,
               email: decodedEmail,
               type: OtpType.email,
             );
           } catch (e) {
-            return "/";
-          }
-
-          if (result.user == null) {
             return "/";
           }
         }
@@ -159,9 +154,7 @@ final GoRouter appRouter = GoRouter(
               "update_referals",
               params: {"id": referal},
             );
-          } catch (e) {
-            return "/";
-          }
+          } catch (e) {}
         }
 
         return "/referal";

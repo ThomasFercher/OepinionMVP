@@ -63,9 +63,27 @@
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
+  <style>
+    .container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      margin-top: -32px;
+      margin-left: -32px;
+    }
+
+    .indicator {
+      width: 64px;
+      height: 64px;
+      
+    }
+  </style>
 </head>
 
-<body>
+<body style="overflow: hidden">
+  <div id="loading_indicator" class="container">
+    <img class="indicator" src="loading.gif" />
+  </div>
   <script>
     window.addEventListener('load', function (ev) {
       // Download main.dart.js
@@ -75,6 +93,10 @@
           serviceWorkerVersion: serviceWorkerVersion,
         },
         onEntrypointLoaded: function (engineInitializer) {
+          var loadingIndicator = document.getElementById("loading_indicator");
+          if (loadingIndicator) {
+            loadingIndicator.remove();
+          }
           engineInitializer.initializeEngine({
             // other config...
             useColorEmoji: true,
