@@ -40,13 +40,13 @@ class VerifcationOutstandingScreen extends StatelessWidget {
             children: [
               const Icon(
                 FontAwesomeIcons.clock,
-                size: 36,
+                size: 28,
                 color: kBlue,
               ),
-              16.hSpacing,
+              8.hSpacing,
               Text(
                 "Verifizierung ausstehend",
-                style: context.typography.headlineMedium?.copyWith(
+                style: context.typography.headlineSmall?.copyWith(
                   color: kBlue,
                 ),
               )

@@ -329,11 +329,13 @@ class _RaffleContainerState extends State<RaffleContainer> {
     final messenger = ScaffoldMessenger.of(context);
 
     try {
+      final nickname = await supabase.rpc("get_random_value", params: {});
       await supabase.auth.signInWithOtp(
         email: email,
         shouldCreateUser: true,
         data: {
           "referal": widget.referalCode,
+          "nickname": nickname,
         },
         //   emailRedirectTo:
         //       "https://oepinion.at/verifiy${widget.referalCode != null ? "?referal=${widget.referalCode}" : ""}&email=${Uri.encodeComponent(email)}",

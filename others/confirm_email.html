@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        p {
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 32px;
+            padding: 0;
+            background-color: #f5f5f5;
+
+        }
+
+        .link {
+            color: #fe0001;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 4px 0;
+        }
+
+        li {
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 4px 12px;
+          
+            list-style-type: disc;
+            list-style-position: inside;
+
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 10%;
+            box-shadow: 0px 6px 18px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .button {
+            position: relative;
+            left: 50%;
+
+            transform: translateX(-50%);
+            display: inline-block;
+            width: 100%;
+            max-width: 500px;
+            background: #fe0001;
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            margin: 32px 0px;
+
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Hallo und willkommen bei der Marktforschung von &Ouml;pinion! </h1>
+
+    </br>
+
+    <h2>Dein Beitrag z&auml;hlt &ndash; Beginne den Wandel in deiner akademischen Arbeit </h2>
+
+    <p>Du stehst kurz davor, den Schl&uuml;ssel zu deiner erfolgreichen Abschlussarbeit zu nutzen. &Ouml;pinion bietet
+        dir die M&ouml;glichkeit, Zeit zu sparen, die Qualit&auml;t deiner Arbeit zu steigern und Spitzenleistungen zu
+        erreichen. Mit uns findest du das perfekte Thema, erstellst starke Umfragen und f&uuml;hrst pr&auml;zise
+        Analysen durch. </p>
+
+    </br>
+
+    <h2>🤫 Exklusives Gewinnspiel nur f&uuml;r Teilnehmer: </h2>
+
+    <p>Best&auml;tige jetzt deine Email und sichere dir die Chance auf einen <b>100&euro; Amazon-Gutschein!</b> Durch
+        die
+        Weiterempfehlung von &Ouml;pinion an andere Studierende kannst du zudem deine Gewinnchancen auf einen
+        zus&auml;tzlichen <b>50&euro; Amazon-Gutschein</b> erh&ouml;hen. </p>
+
+    </br>
+
+    <h2>Bitte best&auml;tige deine Teilnahme jetzt: </h2>
+
+ 
+    <li>Klicke auf den untenstehenden Link, um deine E-Mail-Adresse zu verifizieren. </li>
+
+    <li>Nach der Verifizierung erh&auml;ltst du deinen pers&ouml;nlichen Affiliate-Link. </li>
+
+    <li>Teile deinen Affiliate-Link und erh&ouml;he deine Chancen, zus&auml;tzlich einen 50&euro; Amazon-Gutschein zu
+        gewinnen. </li>
+
+
+
+    <a class="button"
+        href="{{ .SiteURL}}/verify?token={{ .Token}}&email={{ .Email}}&referal={{ .Data.referal}}">Verifzieren </a>
+
+    </br>
+
+    <p>Sobald du verifiziert bist, nimmst du automatisch an der Verlosung des 100&euro; Amazon-Gutscheins teil. Der
+        Gewinner wird zuf&auml;llig aus allen verifizierten Teilnehmern ausgew&auml;hlt und am Ende der Laufzeit von uns
+        per E-Mail kontaktiert. </p>
+
+    </br>
+
+    <h2>Erh&ouml;he deine Gewinnchancen mit dem Affiliate-Programm </h2>
+
+    <p>Mit der Verifizierung deiner E-Mail-Adresse bist du nicht nur im Rennen um den 100&euro; Amazon-Gutschein,
+        sondern erh&auml;ltst auch Zugang zu unserem exklusiven Affiliate-Programm. So funktioniert es: </p>
+
+    <li><b>Erhalte deinen pers&ouml;nlichen Affiliate-Link:</b> Nach der Verifizierung erh&auml;lst du einen
+        einzigartigen Link.
+        Dieser Link ist speziell mit deiner E-Mail-Adresse verkn&uuml;pft, sodass wir nachvollziehen k&ouml;nnen, wie
+        viele Teilnehmer du erfolgreich f&uuml;r die &Ouml;pinion-Umfrage wirbst. </li>
+
+    <li><b>Teile deinen Link:</b> Verwende deinen pers&ouml;nlichen Affiliate-Link, um &Ouml;pinion mit anderen
+        Studierenden zu
+        teilen. Du kannst den Link &uuml;ber soziale Medien, E-Mail oder andere Kommunikationskan&auml;le verbreiten.
+    </li>
+
+    <li><b>Sammle Punkte f&uuml;r jeden verifizierten Teilnehmer:</b> F&uuml;r jeden Teilnehmer, der sich &uuml;ber
+        deinen Link
+        anmeldet und seine E-Mail-Adresse verifiziert, erh&auml;ltst du einen Punkt. Je mehr verifizierte Teilnehmer du
+        wirbst, desto h&ouml;her sind deine Chancen, den zus&auml;tzlichen 50&euro; Amazon-Gutschein zu gewinnen. </li>
+
+    </br>
+
+    <p>Am Ende des Gewinnspiels wird der Teilnehmer mit den meisten geworbenen, verifizierten Teilnehmern
+        zus&auml;tzlich mit einem 50&euro; Amazon-Gutschein belohnt. Das gibt dir eine gro&szlig;artige
+        M&ouml;glichkeit, deine Gewinnchancen zu maximieren und gleichzeitig &Ouml;pinion weiterzuempfehlen! </p>
+
+    </br>
+
+    <h2>Entdecke das Leaderboard f&uuml;r Affiliates </h2>
+
+    <p>Sei immer einen Schritt voraus und behalte den &Uuml;berblick &uuml;ber deine Platzierung im
+        Affiliate-Wettbewerb. Besuche unser <a class="link" href="https://www.oepinion.at/ranking">Leaderboard</a> um zu sehen, wo du stehst! Dein
+        zuf&auml;llig-generierter Name ist [Username] </p>
+
+    </br>
+
+    <p>Wir freuen uns auf deine erfolgreiche Teilnahme und danken dir f&uuml;r deinen Beitrag! </p>
+
+</br>
+
+    <p>Herzliche Gr&uuml;&szlig;e, </p>
+
+    <p>Dein &Ouml;pinion-Team</p>
+</body>
+
+</html>
