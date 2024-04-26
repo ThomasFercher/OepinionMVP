@@ -31,6 +31,13 @@ class MCAnswerNotifier extends FamilyNotifier<MultipleChoiceQuestionState,
   bool get isValid {
     return state.values.every((val) => val == false) == false;
   }
+
+  List<(String, String?)> get selectedChoices {
+    return state.entries
+        .where((element) => element.value)
+        .map((e) => e.key)
+        .toList();
+  }
 }
 
 final mcAnswerNotifier = NotifierProvider.family<MCAnswerNotifier,
@@ -79,7 +86,8 @@ class _MultipleChoiceQuestionPageState
     if (!mounted) return;
 
     final valid = ref.read(mcAnswerNotifier(widget.question).notifier).isValid;
-    final choices = ref.read(mcAnswerNotifier(widget.question)).keys.toList();
+    final choices =
+        ref.read(mcAnswerNotifier(widget.question).notifier).selectedChoices;
 
     validNotifier.value = valid;
 

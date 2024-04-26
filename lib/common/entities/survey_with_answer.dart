@@ -44,10 +44,10 @@ final class MultipleChoiceAnswer extends Answer {
   Json toJson(Question question) {
     return {
       'choices': choices
-          .map((e) => jsonEncode({
+          .map((e) => {
                 'choice': e.$1,
                 'description': e.$2,
-              }))
+              })
           .toList(),
       'id': question.id,
     };
