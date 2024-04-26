@@ -14,6 +14,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 const initalSurvey = "2096122e-162e-4880-9ef6-7aeb56faf2ab";
 
 final GoRouter appRouter = GoRouter(
+  initialLocation: WidgetsBinding.instance.platformDispatcher.defaultRouteName,
   routes: <RouteBase>[
     // GoRoute(
     //   path: '/',
